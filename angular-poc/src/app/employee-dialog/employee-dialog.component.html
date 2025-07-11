@@ -1,0 +1,43 @@
+<!-- Bootstrap Modal -->
+<div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between">
+        <h5 class="modal-title">Edit Employee</h5>
+        <button type="button" (click)="onCancel()">
+          X
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Name:</label>
+            <input class="form-control" [(ngModel)]="employee.empName" name="empName" />
+          </div>
+          <div class="form-group">
+            <label>Email:</label>
+            <input class="form-control" [(ngModel)]="employee.empEmailId" name="empEmailId" />
+          </div>
+          <div class="form-group">
+            <label>Designation:</label>
+            <input class="form-control" [(ngModel)]="employee.empDesignation" name="empDesignation" />
+          </div>
+          <div class="form-group">
+            <label>Role:</label>
+            <input class="form-control" [(ngModel)]="employee.role" name="role" />
+          </div>
+          <div class="form-group">
+            <label>Mobile:</label>
+            <input class="form-control" [(ngModel)]="employee.mobile" name="mobile" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="onSave()">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade show"></div>

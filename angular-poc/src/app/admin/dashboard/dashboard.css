@@ -1,0 +1,36 @@
+.example-card {
+    max-width: 400px;
+    border-radius: 10px;
+  }
+  
+  .example-card-footer {
+    padding: 16px;
+  }
+  
+  .review {
+    height: 50vh;
+  }
+  .details {
+    height: 30vh;
+  }
+  .cards {
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.08);
+  }
+  
+  .space-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sign-out-btn {
+    background-color: rgb(77, 132, 215);
+    color: white;
+  }
+  

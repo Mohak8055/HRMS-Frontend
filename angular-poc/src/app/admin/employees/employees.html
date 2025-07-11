@@ -1,0 +1,54 @@
+<div class="container py-4">
+    <div>
+        <app-breadcrum [items]="[
+      { label: 'Home', url: '/home' },
+      { label: 'Employees List', url: '/about' },
+    ]"></app-breadcrum>
+    </div>
+    <div>
+        <div class="text-end mb-3">
+            <button class="btn create-btn" (click)="onCreate()">
+                Add New Employee
+            </button>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="table-responsive shadow-sm">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead>
+                    <tr class="custom-thead">
+                        <th scope="col">Sr No</th>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Email Id</th>
+                        <th scope="col">Mobile No</th>
+                        <th scope="col">Designation</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of clientsList; track $index) {
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ item.employeeName }}</td>
+                        <td>{{ item.emailId }}</td>
+                        <td>{{item.contactNo}}</td>
+                        <td>{{ item.deptName }}</td>
+                        <td>{{ item.role }}</td>
+                        <td class="d-flex gap-2">
+                            <i style="cursor: pointer;" (click)="onEdit(item)"
+                                class="bi bi-pencil-square text-primary"></i>|
+                            <i style="cursor: pointer;" (click)="openDelete(item)" class="bi bi-trash text-danger"></i>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <app-edit-modal [visible]="showEditModal()" [employee]="selectedUser()" (close)="closeEditModal()"
+        (submit)="updateUser($event)" />
+
+    <app-delete-modal [visible]="showDeleteModal()" [employee]="selectedUser()" (close)="closeDeleteModal()"
+        (confirm)="onDelete($event)" />
+</div>

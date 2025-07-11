@@ -1,0 +1,55 @@
+<!-- <nav>
+  <a (click)="logout()">Home</a> |
+  <a (click)="goToAbout()">About</a>
+</nav> -->
+
+<!-- <hr /> -->
+<div class="col-12">
+  <h4 style="text-transform: capitalize;">Good {{greeting}}</h4>
+  <p style="color:darkgrey;">Don’t worry about failures, worry about the chances you miss when you don’t even try.
+    <br />- Jack Canfield
+  </p>
+</div>
+@if (isLoading) {
+<div class="spinner-border" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+}
+
+<div class="container">
+  <div class="row">
+    <div class="review cards col">
+      Review
+    </div>
+    <div class="details cards col">
+      <div style="padding-bottom: 10px;">{{todayDate}}</div>
+      <div style="padding-bottom: 10px; color: rgb(173, 168, 168); font-size: small;">{{dayOfWeek}} | Genaral Shift
+      </div>
+      <div style="padding-bottom: 10px;">{{currentTime}}</div>
+      <div style="padding-bottom: 0;" class="space-between">
+        <a>View Swipes</a>
+        <button type="button" class="btn sign-out-btn">Sign Out</button>
+      </div>
+    </div>
+    <div class="cards col">
+      <div class="space-between">
+        Upcoming Holidays
+        <a>-></a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="container">
+  @for (item of employeesList; track $index) {
+  <div class="card p-2 m-2" style="width: 18rem;">
+    <div (click)="onEditEmp(item.empId)">Edit</div>
+    <h3>{{ item.empName }}</h3>
+    <p>Employee ID: {{ item.empId }}</p>
+    <p>Code: {{ item.empCode }}</p>
+    <p>Email: {{ item.empEmailId }}</p>
+    <p>Designation: {{ item.empDesignation }}</p>
+    <p>Role: {{ item.role }}</p>
+    <p>Mobile: {{ item.mobile }}</p>
+  </div>
+  }
+</div> -->

@@ -1,0 +1,24 @@
+.layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-fixed {
+  position: fixed;
+  top: 56px; /* Adjust to your navbar height */
+  left: 0;
+  width: 200px;
+  height: calc(100vh - 56px); /* Full height minus navbar */
+  z-index: 1020;
+  background: #fff;
+  box-shadow: 0 0.25rem 1rem rgba(0,0,0,0.08);
+}
+
+.main-scrollable {
+  margin-top: 56px;   /* Same as navbar height */
+  margin-left: 200px; /* Same as sidebar width */
+  height: calc(100vh - 56px);
+  overflow: auto;
+  padding: 1rem;
+  background: #f8f9fa;
+}

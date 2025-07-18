@@ -1,10 +1,10 @@
 <header class="navbar">
   <span class="logo">Angular POC</span>
-  <nav>
-    <div class="d-inline-block position-relative">
+  <nav style="display: inline-flex; align-items: center;">
+    <div><i style="font-size: 30px;" class="bi bi-person-circle"></i></div>
+    <div class="header-name d-inline-block position-relative">
       <a (click)="toggleProfileMenu()" class="profile-link" style="cursor:pointer;">
-        Profile <i class="bi bi-person-circle"></i>
-      </a>
+        <strong>{{userName}}</strong><i style="margin-left: 5px;" class="bi bi-chevron-down"></i></a>
       @if (showProfileMenu) {
       <div class="dropdown-menu show position-absolute end-0 mt-2" style="min-width: 180px;">
         <a style="color: black;" href="/home">My Account</a>

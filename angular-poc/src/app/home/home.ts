@@ -45,10 +45,12 @@ getGreeting(date: Date): string {
   }
 
   formatDate(date: Date): string {
+    const currentDate = new Date();
     const day = date.getDate();
     const month = date.toLocaleString('default', { month: 'long' });
     const suffix = this.getDaySuffix(day);
-    return `${day}${suffix} ${month}`;
+    const year = date.getFullYear();
+    return `${day}${suffix} ${month} ${year}`;
   }
 
   getDaySuffix(day: number): string {

@@ -7,7 +7,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { Dashboard } from './admin/dashboard/dashboard';
 import { EmployeeDashboard } from './employee/employee-dashboard/employee-dashboard';
 import { Employees } from './admin/employees/employees';
-import { Leave } from './employee/leave/leave';
+import { Leave } from './components/leave/leave';
 
 export const routes: Routes = [
   { path: '', component: Login },

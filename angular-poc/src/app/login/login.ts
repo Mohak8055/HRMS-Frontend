@@ -23,6 +23,7 @@ export class Login {
 
   login() {
     const success = this.authService.login(this.username, this.password);
+    console.log('success', success)
     if (success) {
       const role = this.authService.getUserRole();
       if (role === 'Admin Department Employee') this.router.navigate(['/admin']);

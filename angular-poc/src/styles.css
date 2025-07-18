@@ -1,4 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+.blue-color {
+ color: #2e82db
+}
+body {
+  margin: 0;
+  /* font-family: Proxima Nova Regular, sans-serif; */
+  /* font-size: 14px; */
+}
+.form-label {
+  margin-bottom : 0;
+}
+.btn-yes {
+  font-family: Proxima Nova Regular, sans-serif;
+  font-size: 15px;
+  background-color: #2e82db;
+  color: white;
+
+  &:hover {
+    background-color: #185ca5;
+    color: white;
+    box-shadow: none;
+    cursor: pointer;
+  }
+}
+.cdk-overlay-container {
+  z-index: 1055 !important;
+}
+
+/* Snackbar */
+.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+  min-width: 344px;
+    max-width: 672px;
+    /* height: 70px; */
+    /* margin-bottom: 200px; */
+    display: flex !important;
+}
+.mat-mdc-simple-snack-bar {
+  /* display: flex;
+  flex-direction: column;
+  justify-self: center;
+  align-items: center; */
+}
+
+.mat-mdc-snack-bar-container.snackbar-success .mat-mdc-snackbar-surface {
+  background-color: #418043 !important;
+  color: white !important;
+  .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled).mat-unthemed {
+  color: white;
+}
+}
+
+/* .mat-mdc-button .mat-mdc-button-touch-target {
+  border-radius: 15px;
+  height: 35px !important;
+  border: 1px solid white;
+} */
+
+.mat-mdc-snack-bar-container.snackbar-error .mat-mdc-snackbar-surface {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-info .mat-mdc-snackbar-surface {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-warning .mat-mdc-snackbar-surface {
+  background-color: #fc9802;
+  color: #fff;
+  .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled).mat-unthemed {
+  color: white;
+}
+}

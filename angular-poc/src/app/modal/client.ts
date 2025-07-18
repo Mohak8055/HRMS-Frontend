@@ -97,3 +97,15 @@ export class IAllEmployees {
     this.role = '';
   }
 }
+
+export class Employee {
+  employeeId: number | undefined = 0;
+  employeeName: string = '';
+  deptId: number = 0;
+  contactNo: string = '';
+  emailId: string = '';
+  role: string = '';
+  gender: string = '';
+  password: string = ''
+}
+

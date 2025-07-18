@@ -45,9 +45,13 @@ export class Auth {
     let success = true;
     this.authServices.login(payload).subscribe({
       next: (response) => {
+        if (response.result) {
         const data = JSON.stringify(response.data);
         localStorage.setItem('authData', data); // Or handle the token securely
         success = response.result;
+        } else {
+          success = false;
+        }
       },
       error: (err) => {
         console.log('Failed to login', err);
@@ -99,6 +103,17 @@ export class Auth {
       const parsed = JSON.parse(token);
       console.log(parsed.role);
       return parsed.role;
+    } catch {
+      return null;
+    }
+  }
+
+  getUserDetails(): {} | any {
+    const token = localStorage.getItem(this.tokenKey);
+    if (!token) return null;
+    try {
+      const parsed = JSON.parse(token);
+      return parsed;
     } catch {
       return null;
     }

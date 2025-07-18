@@ -9,6 +9,14 @@
   
   .review {
     height: 50vh;
+    width: 100%;
+    .review-img {
+    width: 100%;
+    height: 70%; 
+    object-fit: contain;
+    display: block;
+    transform: rotate(-5deg); 
+  }
   }
   .details {
     height: 30vh;
@@ -33,4 +41,10 @@
     background-color: rgb(77, 132, 215);
     color: white;
   }
-  
+
+  .card-title {
+    font-weight: 600 !important;
+    color: rgb(107, 103, 103);
+    font-size: 16px;
+    padding-bottom: 10px;
+  }

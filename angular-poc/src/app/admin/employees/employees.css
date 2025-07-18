@@ -1,12 +1,7 @@
 .custom-thead,
 .custom-thead tr,
 .custom-thead th {
-    background-color: #4092e4 !important;
+    background-color: #2e82db !important;
     color: #fff !important;
     font-weight: 500;
-}
-
-.create-btn {
-    background-color: #4092e4;
-    color: #fff
 }

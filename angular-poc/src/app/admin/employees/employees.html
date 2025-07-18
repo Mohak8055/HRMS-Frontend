@@ -1,20 +1,27 @@
 <div class="container py-4">
     <div>
         <app-breadcrum [items]="[
-      { label: 'Home', url: '/home' },
-      { label: 'Employees List', url: '/about' },
-    ]"></app-breadcrum>
+          { label: 'Home', url: '/admin/dashboard' },
+          { label: 'Employees List', url: '/admin/employee' },
+        ]"></app-breadcrum>
     </div>
     <div>
         <div class="text-end mb-3">
-            <button class="btn create-btn" (click)="onCreate()">
+            <button class="btn btn-yes" (click)="onCreate()">
                 Add New Employee
             </button>
         </div>
     </div>
     <div class="col-12">
-        <div class="table-responsive shadow-sm">
-            <table class="table table-bordered table-hover align-middle mb-0">
+        <!-- <div class="table-responsive shadow-sm"> -->
+            <app-custom-table 
+            [columns]="columns" 
+            [data]="clientsList" 
+            [actions]="actions" 
+            (rowClick)="onRowClick($event)"
+            (actionClick)="onActionClick($event)">
+            </app-custom-table>
+            <!-- <table class="table table-striped table-bordered table-hover align-middle mb-0">
                 <thead>
                     <tr class="custom-thead">
                         <th scope="col">Sr No</th>
@@ -43,12 +50,20 @@
                     </tr>
                     }
                 </tbody>
-            </table>
-        </div>
+            </table> -->
+        <!-- </div> -->
     </div>
-    <app-edit-modal [visible]="showEditModal()" [employee]="selectedUser()" (close)="closeEditModal()"
-        (submit)="updateUser($event)" />
-
-    <app-delete-modal [visible]="showDeleteModal()" [employee]="selectedUser()" (close)="closeDeleteModal()"
-        (confirm)="onDelete($event)" />
+    <app-delete-modal 
+    [visible]="showDeleteModal()" 
+    [employee]="selectedUser()" 
+    (close)="closeDeleteModal()"
+    (confirm)="onDelete($event)" 
+    />
+    <app-create-update-employee-modal 
+    [visible]="showCreateUpdateModal()"
+    (close)="closeModal()"
+    [formData]="selectedUser()"
+    [isEdit]="isEditMode()"
+    [submit]="submitModal"
+    />
 </div>

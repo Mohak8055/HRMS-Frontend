@@ -1,0 +1,53 @@
+.history-container {
+  background-color: white;
+  /* height: 100vh; */
+  padding: 10px;
+  margin: 10px;
+}
+
+.not-available {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.header-acc {
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  margin-top: 0px !important;
+}
+
+.button-style {
+  padding-bottom: 0px !important;
+}
+
+.text-green {
+    color: green;
+}
+
+.text-pending {
+    color: orange;
+}
+
+.text-red {
+    color: red;
+}
+h6 {
+    font-family: Proxima Nova Regular, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(129, 127, 127);
+}
+p {
+    font-family: Proxima Nova Regular, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.span {
+    font-weight: normal;
+    text-transform: capitalize;
+}

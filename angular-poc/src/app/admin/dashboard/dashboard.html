@@ -1,11 +1,17 @@
-<div class="col-12">
-  <h4 style="text-transform: capitalize;">Good {{greeting}}</h4>
-  <p style="color:darkgrey;">Don’t worry about failures, worry about the chances you miss when you don’t even try.
-    <br />- Jack Canfield
-  </p>
-</div>
-@if (isLoading) {
-<div class="spinner-border" role="status">
+<div class="col-12 p-4" style="display: inline-flex; max-height: 50%;">
+  <div class="col-8">
+    <h4 style="text-transform: capitalize;">Good {{greeting}}</h4>
+    <p style="color:darkgrey;">Don’t worry about failures, worry about the chances you miss when you don’t even try.
+      <br />- Jack Canfield
+    </p>
+  </div>
+  <div class="col-4 position-relative">
+    <img style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; object-fit: cover;"
+      src="images/dbImage.jpeg" class="img-fluid" alt="">
+  </div>
+  </div>
+  @if (isLoading) {
+  <div class="spinner-border" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
 }
@@ -13,23 +19,39 @@
 <div class="container">
   <div class="row">
     <div class="review cards col">
-      Review
+      <p class="card-title">Review</p>
+      <img src="images/CheckList.jpg" class="img-fluid review-img" alt="Review">
+      <p style="text-align: center; color: rgb(187, 182, 182);">Hurray! You've nothing to review</p>
     </div>
     <div class="details cards col">
-      <div style="padding-bottom: 10px;">{{todayDate}}</div>
+      <p class="card-title">{{todayDate}}</p>
       <div style="padding-bottom: 10px; color: rgb(173, 168, 168); font-size: small;">{{dayOfWeek}} | Genaral Shift
       </div>
       <div style="padding-bottom: 10px;">{{currentTime}}</div>
-      <div style="padding-bottom: 0;" class="space-between">
-        <a>View Swipes</a>
+      <br />
+      <div class="space-between">
+        <a class="blue-color" style="text-decoration: none;">View Swipes</a>
         <button type="button" class="btn sign-out-btn">Sign Out</button>
       </div>
     </div>
     <div class="cards col">
-      <div class="space-between">
-        Upcoming Holidays
-        <a>-></a>
+      <div class="space-between pb-2">
+        <p class="card-title">Upcoming Holidays</p>
+        <i style="padding-right: 10px; cursor: pointer;" class="bi bi-arrow-right"></i>
       </div>
+      @for (item of holidayList; track $index) {
+      <div class="col-12">
+        <p class="card-title">{{item.formattedDate}} <span
+            style="font-size: small; font-weight: normal;">{{item.dayName}}</span><br />
+          <span style="font-size: small; font-weight: normal;">{{item.localName}}</span>
+        </p>
+      </div>
+      }
     </div>
   </div>
+
+  <!-- <app-custom-table [columns]="columns" [data]="data" [actions]="actions" (rowClick)="onRowClick($event)"
+    (actionClick)="onActionClick($event)">
+  </app-custom-table> -->
+
 </div>

@@ -1,22 +1,33 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EditModal } from '../../components/modals/edit-modal/edit-modal';
 import { DeleteModal } from '../../components/modals/delete-modal/delete-modal';
 import { Breadcrum } from '../../components/breadcrum/breadcrum';
 import { ClientService } from '../../services/client-service';
-import { EmployeeDetails, IAllEmployees } from '../../modal/client';
-import { IEmployeeList } from '../../modal/employee';
+import { Employee, IAllEmployees } from '../../modal/client';
 import { EmployeeServices } from '../../services/employee-services';
+import {
+  CustomTable,
+  TableColumn,
+} from '../../components/custom-table/custom-table';
+import { CreateUpdateEmployeeModal } from '../../components/modals/create-update-employee-modal/create-update-employee-modal';
+import { ToastServices } from '../../services/toast/toast-services';
 
 @Component({
   selector: 'app-employees',
-  imports: [FormsModule, EditModal, DeleteModal, Breadcrum],
+  imports: [
+    FormsModule,
+    DeleteModal,
+    Breadcrum,
+    CustomTable,
+    CreateUpdateEmployeeModal,
+  ],
   templateUrl: './employees.html',
   styleUrl: './employees.css',
 })
-export class Employees {
+export class Employees implements OnInit {
   clientS = inject(ClientService);
   employeeServices = inject(EmployeeServices);
+  toast = inject(ToastServices);
   clientObject: IAllEmployees = {
     employeeId: 0,
     employeeName: '',
@@ -28,30 +39,66 @@ export class Employees {
   };
   clientsList: any[] = [];
   selectedUser = signal<IAllEmployees | null>(null);
-  showEditModal = signal(false);
   showDeleteModal = signal(false);
+  showCreateUpdateModal = signal(false);
   employeeID = 0;
+  isEditMode = signal(false);
+
+  columns: TableColumn[] = [
+    { key: 'index', label: 'Sr.No', type: 'index' },
+    { key: 'employeeId', label: 'Employee ID' },
+    {
+      key: 'employeeName',
+      label: 'Name',
+      render: (row: any) =>
+        row.employeeName
+          ? row.employeeName.charAt(0).toUpperCase() +
+            row.employeeName.slice(1).toLowerCase()
+          : '',
+    },
+    { key: 'emailId', label: 'Email Id', type: 'text' },
+    { key: 'contactNo', label: 'Mobile Number' },
+    { key: 'deptName', label: 'Departement Name' },
+    { key: 'role', label: 'Role' },
+  ];
+
+  actions = [
+    { label: 'Edit', icon: 'edit', color: 'secondary', action: 'edit' },
+    { label: 'Delete', icon: 'delete', color: 'warn', action: 'delete' },
+  ];
+
+  onRowClick(row: any) {
+    console.log('Row Clicked:', row);
+  }
+
+  onActionClick(event: { row: any; action: string }) {
+    const { row, action } = event;
+    if (action === 'edit') {
+      this.onEdit(row);
+    } else if (action === 'delete') {
+      this.openDelete(row);
+    }
+  }
 
   ngOnInit(): void {
     this.fetchEmployees();
   }
 
   saveEmployee() {
-    console.log(this.clientObject);
     if (this.clientObject.employeeId === undefined) {
       // Create new employee
       this.employeeServices.createEmployee(this.clientObject).subscribe({
         next: (res) => {
           if (res.result) {
-            alert(res.message);
             this.fetchEmployees();
-            this.closeEditModal();
+            this.toast.success(res.message || 'Employee created successfully.');
+            this.closeModal();
           } else {
-            alert(res.message);
+            this.toast.warning(res.message || 'Invalid data');
           }
         },
         error: (err) => {
-          alert('Error saving employee: ' + err.message);
+          this.toast.error(err.message || 'Error saving employee');
           console.log(err);
         },
       });
@@ -59,13 +106,13 @@ export class Employees {
       // Update existing employee
       this.employeeServices.updateEmployee(this.clientObject).subscribe({
         next: (res) => {
-          alert(res.message);
           this.fetchEmployees();
-          this.closeEditModal();
+          this.toast.success(res?.message || 'Employee details updated successfully.');
+          this.closeModal();
           this.employeeID = 0;
         },
         error: (err) => {
-          alert('Error updating employee: ' + err.message);
+          this.toast.error(err.message || 'Error saving employee')
           console.log(err);
         },
       });
@@ -78,13 +125,16 @@ export class Employees {
         this.clientsList = res.data;
         console.log(this.clientsList);
       },
+      error: (err) => {
+        console.log('Something went wrong', err);
+      },
     });
   }
 
   getEmpById(id: number) {
     this.employeeServices.getEmployeeById(id).subscribe({
       next: (res) => {
-        console.log(res.data)
+        console.log(res.data);
         this.selectedUser.set(res.data);
         // this.clientObject = res.data;
       },
@@ -97,11 +147,15 @@ export class Employees {
   deleteEmployee(id: number) {
     this.employeeServices.deleteEmployee(id).subscribe({
       next: (res) => {
-        alert(res.message);
+        if (res.result) {
+        this.toast.success(res.message || 'Employee deteled successfully');
         this.fetchEmployees();
+        } else {
+        this.toast.warning(res.message || 'Something went wrong');
+        }
       },
       error: (err) => {
-        alert('Error deleting employee:' + err.message);
+        this.toast.error(err.message || 'Error deleting employee')
         console.log(err);
       },
     });
@@ -109,7 +163,17 @@ export class Employees {
 
   onCreate() {
     this.selectedUser.set(null);
-    this.showEditModal.set(true);
+    this.clientObject = {
+      employeeId: 0,
+      employeeName: '',
+      deptId: 0,
+      deptName: '',
+      contactNo: '',
+      emailId: '',
+      role: '',
+    };
+    this.isEditMode.set(false);
+    this.showCreateUpdateModal.set(true);
   }
 
   onEdit(item: IAllEmployees) {
@@ -117,29 +181,8 @@ export class Employees {
     const id = item?.employeeId;
     this.getEmpById(id || 0);
     this.employeeID = item.employeeId || 0;
-    this.showEditModal.set(true);
-  }
-
-  closeEditModal() {
-    this.showEditModal.set(false);
-    this.selectedUser.set(null);
-  }
-
-  updateUser(user: IAllEmployees) {
-    console.log('onUpdate', user);
-    const updatedDeatils = {
-      employeeId: this.employeeID || undefined,
-      employeeName: user.employeeName,
-      deptId: user.deptId,
-      deptName: user.deptName,
-      contactNo: user.contactNo,
-      emailId: user.emailId,
-      role: user.role,
-      password: 'Stixis@123',
-    };
-    this.clientObject = { ...updatedDeatils };
-    this.selectedUser.set({ ...updatedDeatils });
-    this.saveEmployee();
+    this.isEditMode.set(true);
+    this.showCreateUpdateModal.set(true);
   }
 
   openDelete(user: IAllEmployees) {
@@ -159,5 +202,26 @@ export class Employees {
     this.selectedUser.set(null);
   }
 
-  onSaveClient() {}
+  showModal() {
+    this.showCreateUpdateModal.set(true);
+  }
+  closeModal() {
+    this.showCreateUpdateModal.set(false);
+  }
+  submitModal = (user: Employee) => {
+    console.log(user);
+    const updatedDeatils = {
+      employeeId: this.employeeID || undefined,
+      employeeName: user.employeeName,
+      deptId: user.deptId,
+      deptName: '',
+      contactNo: user.contactNo,
+      emailId: user.emailId,
+      role: user.role,
+      password: 'Stixis@123',
+    };
+    this.clientObject = { ...updatedDeatils };
+    this.selectedUser.set({ ...updatedDeatils });
+    this.saveEmployee();
+  };
 }

@@ -1,0 +1,16 @@
+[
+  { "date": "2025-01-26", "localName": "Republic Day", "name": "Republic Day", "type": "Gazetted" },
+  { "date": "2025-02-26", "localName": "Maha Shivaratri", "name": "Maha Shivratri", "type": "Gazetted" },
+  { "date": "2025-03-14", "localName": "Holi", "name": "Holi", "type": "Gazetted" },
+  { "date": "2025-03-31", "localName": "Id-ul-Fitr", "name": "Id-ul-Fitr", "type": "Gazetted" },
+  { "date": "2025-04-10", "localName": "Mahavir Jayanti", "name": "Mahavir Jayanti", "type": "Gazetted" },
+  { "date": "2025-04-18", "localName": "Good Friday", "name": "Good Friday", "type": "Gazetted" },
+  { "date": "2025-05-12", "localName": "Buddha Purnima", "name": "Buddha Purnima", "type": "Gazetted" },
+  { "date": "2025-06-07", "localName": "Bakrid (Bakra Eid)", "name": "Bakrid / Eid al-Adha", "type": "Gazetted" },
+  { "date": "2025-07-06", "localName": "Muharram", "name": "Muharram", "type": "Gazetted" },
+  { "date": "2025-08-15", "localName": "Independence Day", "name": "Independence Day", "type": "Gazetted" },
+  { "date": "2025-10-02", "localName": "Gandhi Jayanti", "name": "Gandhi Jayanti", "type": "Gazetted" },
+  { "date": "2025-10-20", "localName": "Diwali (Deepavali)", "name": "Diwali / Deepavali", "type": "Gazetted" },
+  { "date": "2025-11-05", "localName": "Guru Nanak Jayanti", "name": "Guru Nanak Jayanti", "type": "Gazetted" },
+  { "date": "2025-12-25", "localName": "Christmas Day", "name": "Christmas Day", "type": "Gazetted" }
+]

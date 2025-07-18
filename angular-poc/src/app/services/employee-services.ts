@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IEmployeeResponse } from '../modal/employee';
-import { IAllEmployees } from '../modal/client';
+import { Employee, IAllEmployees } from '../modal/client';
 
 @Injectable({
   providedIn: 'root',

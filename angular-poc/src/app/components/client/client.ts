@@ -9,7 +9,7 @@ import { Breadcrum } from "../breadcrum/breadcrum";
 
 @Component({
   selector: 'app-client',
-  imports: [FormsModule, EditModal, DeleteModal, Breadcrum],
+  imports: [FormsModule, Breadcrum],
   templateUrl: './client.html',
   styleUrl: './client.css',
 })

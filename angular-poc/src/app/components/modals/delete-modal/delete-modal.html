@@ -1,17 +1,17 @@
 @if (visible) {
   <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Confirm Delete</h5>
           <button class="btn-close" (click)="handleClose()"></button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete <strong>{{ employee?.empName }}</strong>?</p>
+          <p>Are you sure you want to delete <strong>{{ employee?.employeeName }}</strong>?</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" (click)="handleClose()">Cancel</button>
-          <button class="btn btn-danger" (click)="handleDelete()">Delete</button>
+          <button class="btn btn-yes" (click)="handleDelete()">Delete</button>
         </div>
       </div>
     </div>

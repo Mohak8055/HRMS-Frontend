@@ -1,0 +1,63 @@
+<div class="history-container">
+    @for (item of allLeaveRequests; track $index) {
+    <div style="margin-bottom: 10px;" class="accordion" [attr.id]="item.leaveId">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button button-style" [class.collapsed]="!isPanelOpen(item.leaveId)"
+                    (click)="togglePanel(item.leaveId)" [attr.aria-expanded]="isPanelOpen(item.leaveId)"
+                    [attr.aria-controls]="'collapse-' + item.leaveId">
+                    <div class="col-3" style="padding: 0px; margin: 0px;">
+                        <h6>Category</h6>
+                        <p>Leave</p>
+                    </div>
+                    <div class="col-3">
+                        <h6>Leave Type</h6>
+                        <p>{{item?.leaveType}}</p>
+                    </div>
+                    <div class="col-3">
+                        <h6>No. of days</h6>
+                        <p>{{item?.noOfDays}}</p>
+                    </div>
+                    <div class="col-3">
+                        <h6>Status</h6>
+                        <p class="{{ item?.isApproved ? 'text-green' : item?.isApproved === false ? 'text-red': 'text-pending' }}">
+                            {{item?.isApproved ? 'Approved' : item?.isApproved === false ? 'Rejected' : 'Pending' }}<br />
+                        <body style="background-color: inherit;">{{item?.approvedDate | date:'dd MMM yyyy'}}</body></p>
+                    </div>
+                </button>
+            </h2>
+            <div class="accordion-collapse collapse" [class.show]="isPanelOpen(item.leaveId)"
+                [attr.id]="'collapse-' + item.leaveId" [attr.aria-labelledby]="'heading-' + item.leaveId"
+                aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="col-12">
+                        <h6>Employee ID: <span class="span">{{item?.employeeId}}</span></h6>
+                        <h6>Employee Name: <span class="span">{{item?.employeeName}}</span></h6>
+                        <h6>Duration: <span class="span">{{item?.fromDate | date: 'dd MMM yyyy'}} - {{item?.toDate | date: 'dd MMM yyyy'}}</span>
+                        </h6>
+                        <h6>Reason: <span class="span">{{item?.details}}</span></h6>
+                    </div>
+                    @if (item?.isApproved === null) {
+                    <div style="display: inline-flex; justify-content: flex-end; gap: 10px;" class="col-12">
+                            <button (click)="handleApprove(item?.leaveId)" type="button" class="btn btn-yes">Approve</button>
+                            <button (click)="handleReject(item?.leaveId)" type="button" class="btn btn-secondary">Reject</button>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    @if (!allLeaveRequests) {
+    <div class="col-12" style="display: flex; justify-content: center; align-items: center;">No Data Available</div>
+    }
+    
+    <app-confirmation-modal 
+    #confirmModal 
+    [title]="'Confirmation'" 
+    [message]="confirmationMessage"
+    [confirmText]="'Yes'"
+    [cancelText]="'No'" 
+    (confirmed)="onConfirm()">
+    </app-confirmation-modal>
+    </div>

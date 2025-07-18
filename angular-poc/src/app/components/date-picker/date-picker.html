@@ -1,0 +1,36 @@
+<div>
+<mat-form-field appearance="outline" class="custom-datepicker w-100">
+  <input
+    matInput
+    class="date-container"
+    [matDatepicker]="picker"
+    [placeholder]="placeholder"
+    [min]="minDate"
+    [max]="maxDate"
+    [(ngModel)]="value"
+    (dateChange)="onDateChange($event)"
+    required
+  />
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+  <mat-error *ngIf="!value">
+    {{errorMessage}}
+  </mat-error>
+</mat-form-field>
+</div>
+
+<!-- <div class="form-group w-100">
+  <div class="input-group">
+    <input
+        class="form-control"
+        [placeholder]="placeholder"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        [(ngModel)]="value"
+        (dateSelect)="onDateChange($event)"
+      />
+    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+      <i class="bi bi-calendar3"></i>
+    </button>
+  </div>
+</div> -->

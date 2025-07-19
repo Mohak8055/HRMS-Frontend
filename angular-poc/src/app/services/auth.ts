@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServices } from './auth-services';
+import { Observable } from 'rxjs';
 
 interface User {
   username: string;
@@ -37,27 +38,29 @@ export class Auth {
   //   this.router.navigateByUrl('/home');
   // }
 
-  login(username: string, password: string): boolean {
+  login(data: any): Observable<boolean> {
     const payload = {
-      emailId: username,
-      password: password,
+      emailId: data.username,
+      password: data.password,
     };
-    let success = true;
+    return new Observable<boolean>((observer) => {
     this.authServices.login(payload).subscribe({
       next: (response) => {
         if (response.result) {
-        const data = JSON.stringify(response.data);
-        localStorage.setItem('authData', data); // Or handle the token securely
-        success = response.result;
+          localStorage.setItem('authData', JSON.stringify(response.data));
+          observer.next(true);
         } else {
-          success = false;
+          observer.next(false);
         }
+        observer.complete();
       },
       error: (err) => {
-        console.log('Failed to login', err);
-      },
+        console.error('Login failed', err);
+        observer.next(false);
+        observer.complete();
+      }
     });
-    return success;
+  });
   }
 
   // login(username: string, password: string): boolean {
@@ -97,11 +100,9 @@ export class Auth {
 
   getUserRole(): string | null {
     const token = localStorage.getItem(this.tokenKey);
-    console.log(token);
     if (!token) return null;
     try {
       const parsed = JSON.parse(token);
-      console.log(parsed.role);
       return parsed.role;
     } catch {
       return null;

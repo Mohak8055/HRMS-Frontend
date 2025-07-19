@@ -8,6 +8,7 @@ import { Dashboard } from './admin/dashboard/dashboard';
 import { EmployeeDashboard } from './employee/employee-dashboard/employee-dashboard';
 import { Employees } from './admin/employees/employees';
 import { Leave } from './components/leave/leave';
+import { Holidays } from './holidays/holidays';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -33,9 +34,10 @@ export const routes: Routes = [
         children: [
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: Dashboard },
-          { path: 'leave', component: Leave}
+          { path: 'leave', component: Leave},
         ]
       },
+      { path: 'holidays', component: Holidays}
       // Add any shared routes here if needed
     ]
   },

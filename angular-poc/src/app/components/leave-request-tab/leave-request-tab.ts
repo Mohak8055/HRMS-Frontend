@@ -3,6 +3,7 @@ import { LeaveServices } from '../../services/leave/leave-services';
 import { Auth } from '../../services/auth';
 import { DatePipe } from '@angular/common';
 import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
+import { ToastServices } from '../../services/toast/toast-services';
 
 @Component({
   selector: 'app-leave-request-tab',
@@ -15,6 +16,7 @@ export class LeaveRequestTab implements OnInit {
 
   leaveServices = inject(LeaveServices);
   authServices = inject(Auth);
+  toast = inject(ToastServices);
   allLeaveRequests: any[] = [];
   activePanelId: string | null = null;
   selectedLeaveId: number | 0 = 0;
@@ -45,11 +47,14 @@ export class LeaveRequestTab implements OnInit {
     this.leaveServices.approveLeaveById(id).subscribe({
       next: (res) => {
         if (res.result) {
-          alert(res.message)
+          this.toast.success(res.message || 'Leave request approved');
           this.fetchAllLeaves();
+        } else {
+          this.toast.warning(res.message || 'Something went wrong');
         }
       },
       error: (err) => {
+        this.toast.error(err.message || 'Something went wrong');
         console.log('Something went wrong', err);
       }
     })
@@ -60,11 +65,14 @@ export class LeaveRequestTab implements OnInit {
     this.leaveServices.rejectLeaveById(id).subscribe({
       next: (res) => {
         if (res.result) {
-          alert(res.message)
+          this.toast.success(res.message || 'Leave request rejected');
           this.fetchAllLeaves();
+        } else {
+          this.toast.warning(res.message || 'Something went wrong');
         }
       },
       error: (err) => {
+        this.toast.error(err.message || 'Something went wrong');
         console.log('Something went wrong', err);
       }
     })

@@ -99,6 +99,10 @@ textarea {
   border: .1px solid rgb(244, 242, 242);
 }
 
+.mat-mdc-form-field-error {
+  font-size: small !important;
+}
+
 .flex-end {
   display: flex;
   justify-content: flex-end;

@@ -3,22 +3,37 @@
   <div class="login-image">
     <img src="images/loginI.jpeg" alt="Login Illustration" />
   </div>
-
   <!-- Right Form Section -->
   <div class="login-form">
     <h2 class="text-center mb-4">Sign In</h2>
-    <form>
+    <form [formGroup]="loginDetails" (ngSubmit)="onSubmit()">
       <div class="form-outline mb-4">
-        <label class="form-label" for="form2Example1">Email</label>
-        <input [(ngModel)]="username" name="email" type="email" id="form2Example1" class="form-control" />
+        <label class="form-label" for="form2Example1">Email <span class="text-danger"> *</span></label>
+        <input formControlName="username" placeholder="Enter email" type="email" class="form-control" />
+        @if (loginDetails.controls['username'].errors?.['required'] && loginDetails.controls['username'].touched) {
+          <span style="font-size: 14px;" class="text-danger">Email is required</span>
+        }
+        @if (loginDetails.controls['username'].errors?.['email'] && loginDetails.controls['username'].touched) {
+          <span style="font-size: 14px;" class="text-danger">Enter valid email</span>
+        }</div>
+        
+        <div class="form-outline mb-4">
+          <label class="form-label" for="form2Example2">Password<span class="text-danger"> *</span></label>
+          <div class="input-group">
+            <input formControlName="password" [type]="hidePassword ? 'password' : 'text'" class="form-control"
+              placeholder="Enter password" />
+            <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()"
+              [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'">
+              <i class="bi" [ngClass]="hidePassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+          </div>
+        
+          @if (loginDetails.controls['password'].errors?.['required'] && loginDetails.controls['username'].touched) {
+          <span style="font-size: 14px;" class="text-danger">Password is required</span>
+        }
       </div>
-
-      <div class="form-outline mb-4">
-        <label class="form-label" for="form2Example2">Password</label>
-        <input [(ngModel)]="password" name="password" type="password" id="form2Example2" class="form-control" />
-      </div>
-      <div *ngIf="error" style="color: red">{{ error }}</div>
-      <button (click)="login()" type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
+      <p *ngIf="error" class="text-danger">{{ error }}</p>
+      <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
     </form>
   </div>
 </div>

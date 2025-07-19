@@ -1,13 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DatePicker } from '../date-picker/date-picker';
 import { LeaveServices } from '../../services/leave/leave-services';
 import { ILeaveByIdObject, ILeaveCreate } from '../../modal/leave';
 import { Auth } from '../../services/auth';
-import { LeaveRequestTab } from "../leave-request-tab/leave-request-tab";
-import { LeaveHistoryTab } from "../leave-history-tab/leave-history-tab";
+import { LeaveRequestTab } from '../leave-request-tab/leave-request-tab';
+import { LeaveHistoryTab } from '../leave-history-tab/leave-history-tab';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { ToastServices } from '../../services/toast/toast-services';
@@ -69,29 +77,53 @@ export class Leave implements OnInit {
         validators: [this.dateRangeValidator()],
       }
     );
+
+    this.leaveForm.get('fromDate')?.valueChanges.subscribe(() => {
+      this.clearControlError('fromDate', 'duplicate');
+      this.dateRangeValidator();
+      this.leaveForm.updateValueAndValidity();
+    });
+    this.leaveForm.get('toDate')?.valueChanges.subscribe(() => {
+      this.clearControlError('toDate', 'duplicate');
+      this.dateRangeValidator();
+      this.leaveForm.updateValueAndValidity();
+    });
   }
 
+  clearControlError(controlName: string, errorKey: string): void {
+    const control = this.leaveForm.get(controlName);
+    if (control?.errors?.[errorKey]) {
+      const errors = { ...control.errors };
+      delete errors[errorKey];
+      control.setErrors(Object.keys(errors).length ? errors : null);
+    }
+  }
   //Date range validation
   dateRangeValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
       const fromDate = group.get('fromDate')?.value;
       const toDate = group.get('toDate')?.value;
 
-      if (!fromDate || !toDate)
+      if (!fromDate || !toDate) {
         return {
-          dateRangeInvalid: true,
-          message: 'This field is required',
+          bothRequired: {
+            message: 'Both From Date and To Date are required.',
+          },
         };
+      }
 
       const from = new Date(fromDate).setHours(0, 0, 0, 0);
       const to = new Date(toDate).setHours(0, 0, 0, 0);
 
-      return from > to
-        ? {
-            dateRangeInvalid: true,
+      if (from > to) {
+        return {
+          dateRangeInvalid: {
             message: 'To Date must be greater than or equal to From Date.',
-          }
-        : null;
+          },
+        };
+      }
+
+      return null;
     };
   }
 
@@ -171,9 +203,7 @@ export class Leave implements OnInit {
             contactDetails: '',
             reason: '',
           });
-          this.leaveForm.markAsPristine();
-          this.leaveForm.markAsUntouched();
-          this.leaveForm.updateValueAndValidity();
+          this.leaveForm.setErrors(null);
         } else {
           this.toast.success(resp.message || 'Something went wrong');
         }
@@ -186,10 +216,12 @@ export class Leave implements OnInit {
   }
 
   onSubmit() {
+    this.leaveForm.updateValueAndValidity();
     if (this.leaveForm.invalid) {
       this.leaveForm.markAllAsTouched();
       return;
     }
+    console.log('first) ',this.leaveForm.value)
     this.addLeaveReq(this.leaveForm.value);
   }
 

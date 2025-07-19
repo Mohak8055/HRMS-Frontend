@@ -21,7 +21,7 @@
     <div class="review cards col">
       <p class="card-title">Review</p>
       <img src="images/CheckList.jpg" class="img-fluid review-img" alt="Review">
-      <p style="text-align: center; color: rgb(187, 182, 182);">Hurray! You've nothing to review</p>
+      <p style="text-align: center; color: rgb(187, 182, 182);">Hurrah! You've nothing to review</p>
     </div>
     <div class="details cards col">
       <p class="card-title">{{todayDate}}</p>
@@ -30,14 +30,16 @@
       <div style="padding-bottom: 10px;">{{currentTime}}</div>
       <br />
       <div class="space-between">
-        <a class="blue-color" style="text-decoration: none;">View Swipes</a>
+        <a (click)="onViewSwipesClick()" class="blue-color" style="text-decoration: none; cursor: pointer;">View Swipes</a>
         <button type="button" class="btn sign-out-btn">Sign Out</button>
       </div>
     </div>
-    <div class="cards col">
+    <div class="cards col px-2">
       <div class="space-between pb-2">
         <p class="card-title">Upcoming Holidays</p>
-        <i style="padding-right: 10px; cursor: pointer;" class="bi bi-arrow-right"></i>
+        <a [routerLink]="'/holidays'" routerLinkActive="active">
+        <i style="padding-right: 10px; cursor: pointer; font-size: 22px;" class="bi bi-arrow-right"></i>
+      </a>
       </div>
       @for (item of holidayList; track $index) {
       <div class="col-12">
@@ -49,7 +51,11 @@
       }
     </div>
   </div>
-
+<app-view-swipes
+[visible]="showViewSwipes()"
+(close)="closeViewSwipes()"
+>
+</app-view-swipes>
   <!-- <app-custom-table [columns]="columns" [data]="data" [actions]="actions" (rowClick)="onRowClick($event)"
     (actionClick)="onActionClick($event)">
   </app-custom-table> -->

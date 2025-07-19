@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { IEmployee } from '../../modal/employee';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -9,10 +9,12 @@ import { EmployeeDialogComponent } from '../../employee-dialog/employee-dialog.c
 import { CustomTable, TableColumn } from "../../components/custom-table/custom-table";
 import { HolidayService } from '../../services/holiday/holiday-service';
 import { Holiday } from '../../modal/holiday';
+import { ViewSwipes } from "../../components/modals/view-swipes/view-swipes";
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatCardModule, MatChipsModule, MatProgressBarModule],
+  imports: [MatCardModule, MatChipsModule, MatProgressBarModule, ViewSwipes, RouterModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -20,6 +22,8 @@ export class Dashboard {
   empService = inject(Emp);
   dialog = inject(MatDialog);
   holidayService = inject(HolidayService);
+  showViewSwipes = signal(false);
+
   employeesList: IEmployee[] = [];
   openPopup = false;
   isLoading = true;
@@ -162,5 +166,11 @@ export class Dashboard {
     } else if (action === 'delete') {
       console.log('Delete:', row);
     }
+  }
+  onViewSwipesClick() {
+    this.showViewSwipes.set(true);
+  }
+  closeViewSwipes() {
+    this.showViewSwipes.set(false);
   }
 }

@@ -1,0 +1,23 @@
+<div class="container">
+    <!-- <div style="display: flex; flex-direction: column; align-items: flex-end; padding: 10px;" class="col-12"></div> -->
+    <div class="center row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
+        <div class="card-container col" *ngFor="let month of allMonths">
+            <h5 class="card-title">{{ month }}</h5>
+            <ng-container *ngIf="holidayList && holidayList[month] && holidayList[month].length > 0; else noHoliday">
+                <div class="col-12 card-content" *ngFor="let holiday of holidayList[month]">
+                    <div style="display: flex; flex-direction: column" class="col-2">
+                        <span class="content-date">{{ holiday.date | date: 'dd' }}</span>
+                        <span style="font-size: 14px; color: rgb(170, 168, 168);">{{ holiday.date | date: 'EEE'
+                            }}</span>
+                    </div>
+                    <div style="font-size: 16px; color: rgb(154, 152, 152);" class="col-10">{{ holiday.name }}</div>
+                </div>
+            </ng-container>
+            <ng-template #noHoliday>
+                <div class="col-12 no-data">
+                    <p class="text-muted light-grey">No holidays</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

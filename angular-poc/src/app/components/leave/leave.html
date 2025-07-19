@@ -17,19 +17,21 @@
               </mat-select>
               <mat-error *ngIf="leaveForm.get('leaveType')?.invalid && leaveForm.get('leaveType')?.touched">
                 {{ getFormError('leaveType') }}
-        </mat-error>
-      </mat-form-field>
+              </mat-error>
+            </mat-form-field>
           </div>
           <div class="col-12 row-style">
             <div class="col-4">
               <label class="form-label">From Date<span class="red-color"> *</span></label>
-              <app-date-picker 
-              [placeholder]="'MM/DD/YYYY'" 
-              [minDate]="min" 
-              [maxDate]="max"
-              [(value)]="leaveForm.controls['fromDate'].value"
-              [errorMessage]="'Please select Valid date'"
-              ></app-date-picker>
+              <app-date-picker [placeholder]="'MM/DD/YYYY'" [minDate]="min" [maxDate]="max"
+                [(value)]="leaveForm.controls['fromDate'].value" [picker]="'picker1'"
+                ></app-date-picker>
+              <!-- <mat-error *ngIf="leaveForm.errors?.['dateRangeInvalid'] && leaveForm.get('fromDate')?.touched">
+                {{ leaveForm.errors?.['dateRangeInvalid']?.message }}
+              </mat-error>
+              <mat-error *ngIf="leaveForm.errors?.['bothRequired'] && leaveForm.get('fromDate')?.touched">
+                {{ leaveForm.errors?.['bothRequired']?.message }}
+              </mat-error> -->
             </div>
             <div class="col-4">
               <label class="form-label">Session</label>
@@ -42,15 +44,16 @@
                   <mat-option value="2">Session Two Leave</mat-option>
                 </mat-select>
               </mat-form-field>
-              </div>
-              </div>
+            </div>
+          </div>
           <div class="col-12 row-style">
             <div class="col-4">
               <label class="form-label">To Date<span class="red-color"> *</span></label>
               <app-date-picker [placeholder]="'MM/DD/YYYY'" [minDate]="min" [maxDate]="max"
-                [(value)]="leaveForm.controls['toDate'].value"
-                [errorMessage]="'Please select Valid date'"></app-date-picker>
-              </div>
+                [(value)]="leaveForm.controls['toDate'].value" [picker]="'picker2'"
+                >
+              </app-date-picker>
+            </div>
             <div class="col-4">
               <label class="form-label">Session</label>
               <mat-form-field [ngClass]="{
@@ -63,65 +66,68 @@
                 </mat-select>
               </mat-form-field>
             </div>
-              </div>
-              <div class="dark-red" *ngIf="leaveForm.errors?.['dateRangeInvalid']">
+          </div>
+                         <mat-error *ngIf="leaveForm.errors?.['dateRangeInvalid'] && leaveForm.get('toDate')?.touched">
+                {{ leaveForm.errors?.['dateRangeInvalid']?.message }}
+              </mat-error>
+              <mat-error *ngIf="leaveForm.errors?.['bothRequired'] && leaveForm.get('toDate')?.touched">
+                {{ leaveForm.errors?.['bothRequired']?.message }}
+              </mat-error>
+          <!-- <div class="dark-red" *ngIf="leaveForm.errors?.['dateRangeInvalid'] && leaveForm.touched">
                 To Date must be greater than or equal to From Date.
-              </div>
-              <div class="col-12 row-style">
-                <div class="col-4">
-                  <label class="form-label">Applying To:<span class="red-color"> *</span></label>
-                  <mat-form-field 
-                  [ngClass]="{'placeholder-active': 
-                  leaveForm.get('applyingTo')?.value === ''}" 
-                  appearance="outline" class="w-100">
-                    <mat-select formControlName="applyingTo">
-                      <mat-option value="" [hidden]="true" [disabled]="true">Select Applying to</mat-option>
-                      <mat-option value="1">John B</mat-option>
-                      <mat-option value="2">Mahesh P</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="leaveForm.get('applyingTo')?.invalid && leaveForm.get('applyingTo')?.touched">
-                      {{ getFormError('applyingTo') }}
-                    </mat-error>
-                  </mat-form-field>
-                  </div>
-                <div class="col-4">
-                  <label class="form-label">CC:</label>
-                  <mat-form-field 
-                  [ngClass]="{'placeholder-active': leaveForm.get('cc')?.value === ''}" 
-                  appearance="outline" class="w-100">
-                    <mat-select formControlName="cc">
-                      <mat-option value="" [hidden]="true" [disabled]="true">Select CC</mat-option>
-                      <mat-option value="1">John B</mat-option>
-                      <mat-option value="2">Mahesh P</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div class="col-3">
-                  <label class="form-label">Contact Details<span class="red-color"> *</span></label>
-                  <mat-form-field appearance="outline" class="w-100">
-                    <input matInput formControlName="contactDetails" placeholder="Contact Details" />
-                    <mat-error *ngIf="leaveForm.get('contactDetails')?.invalid && leaveForm.get('contactDetails')?.touched">
-                      {{ getFormError('contactDetails') }}
-                    </mat-error>
-                  </mat-form-field>
-                  </div>
-                  </div>
-              <div class="col-12">
-            <label class="form-label">Reason<span class="red-color"> *</span></label>
-              <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="reason" placeholder="Enter reason" />
-                <mat-error *ngIf="leaveForm.get('reason')?.invalid && leaveForm.get('reason')?.touched">
-                  {{ getFormError('reason') }}
+              </div> -->
+          <div class="col-12 row-style">
+            <div class="col-4">
+              <label class="form-label">Applying To:<span class="red-color"> *</span></label>
+              <mat-form-field [ngClass]="{'placeholder-active': 
+                  leaveForm.get('applyingTo')?.value === ''}" appearance="outline" class="w-100">
+                <mat-select formControlName="applyingTo">
+                  <mat-option value="" [hidden]="true" [disabled]="true">Select Applying to</mat-option>
+                  <mat-option value="1">John B</mat-option>
+                  <mat-option value="2">Mahesh P</mat-option>
+                </mat-select>
+                <mat-error *ngIf="leaveForm.get('applyingTo')?.invalid && leaveForm.get('applyingTo')?.touched">
+                  {{ getFormError('applyingTo') }}
                 </mat-error>
               </mat-form-field>
-              </div>
-            <div class="col-12 mt-3 flex-end">
-              <button class="btn btn-secondary" (click)="resetForm()" type="button">
-                Reset
-              </button>
-              <button class="btn btn-yes" type="submit">
-                Submit
-              </button>
+            </div>
+            <div class="col-4">
+              <label class="form-label">CC:</label>
+              <mat-form-field [ngClass]="{'placeholder-active': leaveForm.get('cc')?.value === ''}" appearance="outline"
+                class="w-100">
+                <mat-select formControlName="cc">
+                  <mat-option value="" [hidden]="true" [disabled]="true">Select CC</mat-option>
+                  <mat-option value="1">John B</mat-option>
+                  <mat-option value="2">Mahesh P</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <label class="form-label">Contact Details<span class="red-color"> *</span></label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="contactDetails" placeholder="Contact Details" />
+                <mat-error *ngIf="leaveForm.get('contactDetails')?.invalid && leaveForm.get('contactDetails')?.touched">
+                  {{ getFormError('contactDetails') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Reason<span class="red-color"> *</span></label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput formControlName="reason" placeholder="Enter reason" />
+              <mat-error *ngIf="leaveForm.get('reason')?.invalid && leaveForm.get('reason')?.touched">
+                {{ getFormError('reason') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-12 mt-3 flex-end">
+            <button class="btn btn-secondary" (click)="resetForm()" type="button">
+              Reset
+            </button>
+            <button class="btn btn-yes" type="submit">
+              Submit
+            </button>
           </div>
         </div>
       </form>
@@ -129,14 +135,14 @@
   </mat-tab>
   <mat-tab label="History">
     <ng-template matTabContent>
-    <app-leave-history-tab></app-leave-history-tab>
+      <app-leave-history-tab></app-leave-history-tab>
     </ng-template>
   </mat-tab>
   @if (userDeatils.role === 'Admin Department Employee') {
   <mat-tab label="Leave Requests">
     <ng-template matTabContent>
-    <app-leave-request-tab></app-leave-request-tab>
+      <app-leave-request-tab></app-leave-request-tab>
     </ng-template>
   </mat-tab>
   }
-  </mat-tab-group>
+</mat-tab-group>

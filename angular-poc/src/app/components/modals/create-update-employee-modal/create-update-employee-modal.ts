@@ -33,8 +33,8 @@ export class CreateUpdateEmployeeModal implements OnChanges {
     employeeId: new FormControl(0),
     employeeName: new FormControl('', [Validators.required]),
     deptId: new FormControl('', [Validators.required]),
-    contactNo: new FormControl('', [Validators.required]),
-    emailId: new FormControl('', [Validators.required]),
+    contactNo: new FormControl('', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]),
+    emailId: new FormControl('', [Validators.required, Validators.email]),
     role: new FormControl('', [Validators.required]),
   });
 

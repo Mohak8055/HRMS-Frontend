@@ -27,6 +27,7 @@ export class DatePicker {
   @Input() placeholder: string = 'MM/DD/YYYY';
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
+  @Input() picker: string = ''
 
   @Input() value: Date | null = null;
   @Output() valueChange = new EventEmitter<string>();

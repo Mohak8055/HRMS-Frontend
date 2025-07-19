@@ -12,7 +12,7 @@
                         <div class="col-6 mb-3">
                             <label>Name <span class="text-danger"> *</span></label>
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput formControlName="employeeName" placeholder="Enter name" />
+                                <input matInput formControlName="employeeName" placeholder="Enter Name" />
                                 @if (employeeDetails.controls['employeeName'].errors?.['required'] &&
                                 employeeDetails.controls['employeeName'].touched) {
                                 <mat-error>
@@ -31,16 +31,28 @@
                                     This is required
                                 </mat-error>
                                 }
+                                @if (employeeDetails.controls['emailId'].errors?.['email'] &&
+                                employeeDetails.controls['emailId'].touched) {
+                                <mat-error>
+                                    Enter Valid email
+                                </mat-error>
+                                }
                             </mat-form-field>
                         </div>
                         <div class="col-6 mb-3">
                             <label>Mobile Number<span class="text-danger"> *</span></label>
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput formControlName="contactNo" placeholder="Enter Mobile Number" />
+                                <input matInput formControlName="contactNo" maxlength="10" placeholder="Enter Mobile Number" />
                                 @if (employeeDetails.controls['contactNo'].errors?.['required'] &&
                                 employeeDetails.controls['contactNo'].touched) {
                                 <mat-error>
                                     This is required
+                                </mat-error>
+                                }
+                                @if (employeeDetails.controls['contactNo'].errors?.['pattern'] &&
+                                employeeDetails.controls['contactNo'].touched) {
+                                <mat-error>
+                                    Enter Valid mobile number
                                 </mat-error>
                                 }
                             </mat-form-field>

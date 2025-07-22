@@ -40,14 +40,14 @@ export class Auth {
 
   login(data: any): Observable<boolean> {
     const payload = {
-      emailId: data.username,
+      email: data.username,
       password: data.password,
     };
     return new Observable<boolean>((observer) => {
     this.authServices.login(payload).subscribe({
       next: (response) => {
-        if (response.result) {
-          localStorage.setItem('authData', JSON.stringify(response.data));
+        if (response) {
+          localStorage.setItem('authData', JSON.stringify(response));
           observer.next(true);
         } else {
           observer.next(false);
@@ -103,7 +103,7 @@ export class Auth {
     if (!token) return null;
     try {
       const parsed = JSON.parse(token);
-      return parsed.role;
+      return parsed.roles[0].name;
     } catch {
       return null;
     }

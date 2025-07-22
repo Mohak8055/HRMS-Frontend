@@ -1,0 +1,31 @@
+<div class="container">
+    <!-- <app-breadcrum [items]="[
+          { label: 'Home', url: '/admin/dashboard' },
+          { label: 'My Account', url: '/my-account' },
+        ]"></app-breadcrum> -->
+    <div class="col-12">
+        <div class="h4">Employee Information</div>
+    </div>
+    <div class="container profile-card">
+        <div class="row py-4">
+            <div class="col-6">
+                <label>Name: </label>
+                <span>{{userDetails.firstName + " " + userDetails?.lastName}}</span>
+            </div>
+            <div class="col-6">
+                <label>Email Id: </label>
+                <span>{{userDetails.email}}</span>
+            </div>
+        </div>
+        <div class="row pb-4">
+            <div class="col-6">
+                <label>Employee ID: </label>
+                <span>{{userDetails.userId}}</span>
+            </div>
+            <div class="col-6">
+                <label>Contact No.: </label>
+                <span>{{userDetails.phone}}</span>
+            </div>
+        </div>
+    </div>
+</div>

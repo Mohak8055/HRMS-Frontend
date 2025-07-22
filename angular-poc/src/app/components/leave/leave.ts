@@ -19,6 +19,7 @@ import { LeaveHistoryTab } from '../leave-history-tab/leave-history-tab';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { ToastServices } from '../../services/toast/toast-services';
+import { Breadcrum } from '../breadcrum/breadcrum';
 
 @Component({
   selector: 'app-leave',

@@ -9,8 +9,8 @@ body {
 }
 body {
   margin: 0;
-  /* font-family: Proxima Nova Regular, sans-serif; */
-  /* font-size: 14px; */
+  font-family: Proxima Nova Regular, sans-serif;
+  font-size: 14px;
 }
 .form-label {
   margin-bottom : 0;

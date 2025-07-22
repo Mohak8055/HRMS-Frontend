@@ -45,5 +45,6 @@ export class DatePicker {
     );
 
     this.valueChange.emit(utcDate.toISOString());
+    console.log(this.valueChange.emit(utcDate.toISOString()))
   }
 }

@@ -37,6 +37,7 @@ export class Login {
       this.login();
     }
   }
+  
   login(): void {
     this.authService
       .login(this.loginDetails.value)
@@ -44,7 +45,8 @@ export class Login {
         console.log('Login result:', success);
         if (success) {
           const role = this.authService.getUserRole();
-          if (role === 'Admin Department Employee') {
+          console.log(role === 'Admin','role')
+          if (role === 'Admin') {
             this.router.navigate(['/admin']);
           } else if (role === 'Employee') {
             this.router.navigate(['/employee']);

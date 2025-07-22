@@ -51,6 +51,7 @@ export class CustomTable implements AfterViewInit {
     color?: string;
     action: string;
   }[] = [];
+  @Input() showPagination: boolean = true;
 
   @Output() rowClick = new EventEmitter<any>();
   @Output() actionClick = new EventEmitter<{ row: any; action: string }>();

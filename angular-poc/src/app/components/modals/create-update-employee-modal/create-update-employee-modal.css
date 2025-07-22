@@ -32,3 +32,17 @@
 ::ng-deep .mat-mdc-option {
   border: .1px solid rgb(244, 242, 242);
 }
+
+.custom-toggle {
+  transform: scale(0.8); /* smaller */
+  transform-origin: left; /* so it scales from left */
+}
+
+.custom-toggle .mat-slide-toggle-bar {
+  height: 16px; /* optional fine-tuning */
+}
+
+.custom-toggle .mat-slide-toggle-thumb {
+  height: 10px;
+  width: 10px;
+}

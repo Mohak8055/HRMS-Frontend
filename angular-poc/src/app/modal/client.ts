@@ -99,13 +99,27 @@ export class IAllEmployees {
 }
 
 export class Employee {
-  employeeId: number | undefined = 0;
-  employeeName: string = '';
-  deptId: number = 0;
-  contactNo: string = '';
-  emailId: string = '';
-  role: string = '';
-  gender: string = '';
-  password: string = ''
+  // employeeId: number | undefined = 0;
+  // employeeName: string = '';
+  // deptId: number = 0;
+  // contactNo: string = '';
+  // emailId: string = '';
+  // role: string = '';
+  // gender: string = '';
+  // password: string = ''
+  id?: number | undefined;
+  email: string = '';
+  phone: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  dob: string = '';
+  doj: string = '';
+  departmentId: number = 0;
+  managerId: number = 0;
+  active: boolean = true;
+  createdAt: string = '';
+  updatedAt: string = '';
+  password: string = '';
+  roleId: number = 0;
 }
 

@@ -13,7 +13,7 @@ export class NavbarComponent {
   router = inject(Router);
   authService = inject(Auth);
   userDeatils = this.authService.getUserDetails();
-  userName = this.userDeatils ? this.userDeatils?.employeeName : '';
+  userName = this.userDeatils ? this.userDeatils?.firstName + " " + this.userDeatils?.lastName  : '';
   showProfileMenu = false;
   private elementRef = inject(ElementRef);
 

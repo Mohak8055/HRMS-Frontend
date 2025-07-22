@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IEmployeeList } from '../../../modal/employee';
-import { EmployeeDetails, IAllEmployees } from '../../../modal/client';
+import { Employee, EmployeeDetails, IAllEmployees } from '../../../modal/client';
 
 @Component({
   selector: 'app-delete-modal',
@@ -10,11 +10,11 @@ import { EmployeeDetails, IAllEmployees } from '../../../modal/client';
   styleUrl: './delete-modal.css',
 })
 export class DeleteModal {
-  @Input() employee: IAllEmployees | null = null;
+  @Input() employee: Employee | null = null;
   @Input() visible: boolean = false;
   // @Input() id:number = 0;
   @Output() close = new EventEmitter<void>();
-  @Output() confirm = new EventEmitter<IAllEmployees>();
+  @Output() confirm = new EventEmitter<Employee>();
 
   handleDelete() {
     if (this.employee) this.confirm.emit(this.employee);

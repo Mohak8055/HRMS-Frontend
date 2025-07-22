@@ -1,0 +1,16 @@
+.profile-card {
+    border: 1px solid lightgrey;
+    width: 100%;
+    background-color: white;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+label {
+    color: rgb(133, 131, 131);
+}
+
+span {
+    margin-left: 10px;
+    font-weight: 500;
+}

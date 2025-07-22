@@ -9,6 +9,7 @@ import { EmployeeDashboard } from './employee/employee-dashboard/employee-dashbo
 import { Employees } from './admin/employees/employees';
 import { Leave } from './components/leave/leave';
 import { Holidays } from './holidays/holidays';
+import { MyAccount } from './my-account/my-account';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -16,11 +17,11 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivateChild: [authGuard(['Admin Department Employee', 'Employee'])],
+    canActivateChild: [authGuard(['Admin', 'Employee'])],
     children: [
       {
         path: 'admin',
-        canActivate: [authGuard(['Admin Department Employee'])],
+        canActivate: [authGuard(['Admin'])],
         children: [
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: Dashboard },
@@ -37,7 +38,8 @@ export const routes: Routes = [
           { path: 'leave', component: Leave},
         ]
       },
-      { path: 'holidays', component: Holidays}
+      { path: 'holidays', component: Holidays},
+      { path: 'my-account', component: MyAccount}
       // Add any shared routes here if needed
     ]
   },

@@ -28,17 +28,31 @@ export class Employees implements OnInit {
   clientS = inject(ClientService);
   employeeServices = inject(EmployeeServices);
   toast = inject(ToastServices);
-  clientObject: IAllEmployees = {
-    employeeId: 0,
-    employeeName: '',
-    deptId: 0,
-    deptName: '',
-    contactNo: '',
-    emailId: '',
-    role: '',
+  clientObject: Employee = {
+    // employeeId: 0,
+    // employeeName: '',
+    // deptId: 0,
+    // deptName: '',
+    // contactNo: '',
+    // emailId: '',
+    // role: '',
+    id: undefined,
+    email: '',
+    phone: '',
+    firstName: '',
+    lastName: '',
+    dob: '',
+    doj: '',
+    departmentId: 0,
+    managerId: 0,
+    active: true,
+    createdAt: '',
+    updatedAt: '',
+    password: '',
+    roleId: 0,
   };
   clientsList: any[] = [];
-  selectedUser = signal<IAllEmployees | null>(null);
+  selectedUser = signal<Employee | null>(null);
   showDeleteModal = signal(false);
   showCreateUpdateModal = signal(false);
   employeeID = 0;
@@ -46,20 +60,30 @@ export class Employees implements OnInit {
 
   columns: TableColumn[] = [
     { key: 'index', label: 'Sr.No', type: 'index' },
-    { key: 'employeeId', label: 'Employee ID' },
+    { key: 'id', label: 'Employee ID' },
     {
-      key: 'employeeName',
+      key: 'firstName',
       label: 'Name',
       render: (row: any) =>
-        row.employeeName
-          ? row.employeeName.charAt(0).toUpperCase() +
-            row.employeeName.slice(1).toLowerCase()
+        row.firstName
+          ? row.firstName.charAt(0).toUpperCase() +
+            row.firstName.slice(1).toLowerCase() +
+            ' ' +
+            row.lastName.charAt(0).toUpperCase() +
+            row.lastName.slice(1).toLowerCase()
           : '',
     },
-    { key: 'emailId', label: 'Email Id', type: 'text' },
-    { key: 'contactNo', label: 'Mobile Number' },
-    { key: 'deptName', label: 'Departement Name' },
-    { key: 'role', label: 'Role' },
+    { key: 'email', label: 'Email Id', type: 'text' },
+    { key: 'phone', label: 'Mobile Number' },
+    { key: 'departmentId', label: 'Departement Name', 
+      render: (row: any) => row?.department?.name
+     },
+    { key: 'roleId', label: 'Role', 
+      render: (row: any) => row?.role?.name
+     },
+    { key: 'active', label: 'Status' ,
+      render: (row: any) => row?.active ? 'Active' : 'InActive'
+    }
   ];
 
   actions = [
@@ -85,17 +109,20 @@ export class Employees implements OnInit {
   }
 
   saveEmployee() {
-    if (this.clientObject.employeeId === undefined) {
+    if (this.employeeID === 0) {
       // Create new employee
       this.employeeServices.createEmployee(this.clientObject).subscribe({
         next: (res) => {
-          if (res.result) {
-            this.fetchEmployees();
+          this.fetchEmployees();
             this.toast.success(res.message || 'Employee created successfully.');
             this.closeModal();
-          } else {
-            this.toast.warning(res.message || 'Invalid data');
-          }
+          // if (res.result) {
+          //   this.fetchEmployees();
+          //   this.toast.success(res.message || 'Employee created successfully.');
+          //   this.closeModal();
+          // } else {
+          //   this.toast.warning(res.message || 'Invalid data');
+          // }
         },
         error: (err) => {
           this.toast.error(err.message || 'Error saving employee');
@@ -107,22 +134,25 @@ export class Employees implements OnInit {
       this.employeeServices.updateEmployee(this.clientObject).subscribe({
         next: (res) => {
           this.fetchEmployees();
-          this.toast.success(res?.message || 'Employee details updated successfully.');
+          this.toast.success(
+            res?.message || 'Employee details updated successfully.'
+          );
           this.closeModal();
           this.employeeID = 0;
         },
         error: (err) => {
-          this.toast.error(err.message || 'Error saving employee')
+          this.toast.error(err.message || 'Error saving employee');
           console.log(err);
         },
       });
     }
   }
 
+
   fetchEmployees() {
     this.employeeServices.getAllEmployees().subscribe({
       next: (res) => {
-        this.clientsList = res.data;
+        this.clientsList = res;
         console.log(this.clientsList);
       },
       error: (err) => {
@@ -134,8 +164,8 @@ export class Employees implements OnInit {
   getEmpById(id: number) {
     this.employeeServices.getEmployeeById(id).subscribe({
       next: (res) => {
-        console.log(res.data);
-        this.selectedUser.set(res.data);
+        console.log(res);
+        this.selectedUser.set(res);
         // this.clientObject = res.data;
       },
       error: (err) => {
@@ -145,17 +175,23 @@ export class Employees implements OnInit {
   }
 
   deleteEmployee(id: number) {
-    this.employeeServices.deleteEmployee(id).subscribe({
+    const payload = {
+      id: id,
+      status: false,
+    }
+    this.employeeServices.deleteEmployee(payload).subscribe({
       next: (res) => {
-        if (res.result) {
-        this.toast.success(res.message || 'Employee deteled successfully');
-        this.fetchEmployees();
-        } else {
-        this.toast.warning(res.message || 'Something went wrong');
-        }
+          this.toast.success(res.message || 'Employee deteled successfully');
+          this.fetchEmployees();
+        // if (res.result) {
+        //   this.toast.success(res.message || 'Employee deteled successfully');
+        //   this.fetchEmployees();
+        // } else {
+        //   this.toast.warning(res.message || 'Something went wrong');
+        // }
       },
       error: (err) => {
-        this.toast.error(err.message || 'Error deleting employee')
+        this.toast.error(err.message || 'Error deleting employee');
         console.log(err);
       },
     });
@@ -164,34 +200,44 @@ export class Employees implements OnInit {
   onCreate() {
     this.selectedUser.set(null);
     this.clientObject = {
-      employeeId: 0,
-      employeeName: '',
-      deptId: 0,
-      deptName: '',
-      contactNo: '',
-      emailId: '',
-      role: '',
+      email: '',
+      phone: '',
+      firstName: '',
+      lastName: '',
+      dob: '',
+      doj: '',
+      departmentId: 0,
+      managerId: 0,
+      active: true,
+      createdAt: '',
+      updatedAt: '',
+      password: '',
+      roleId: 0,
     };
     this.isEditMode.set(false);
     this.showCreateUpdateModal.set(true);
   }
 
-  onEdit(item: IAllEmployees) {
+  onEdit(item: Employee) {
     console.log(item);
-    const id = item?.employeeId;
+    const id = item?.id;
     this.getEmpById(id || 0);
-    this.employeeID = item.employeeId || 0;
+    this.employeeID = id || 0;
     this.isEditMode.set(true);
     this.showCreateUpdateModal.set(true);
   }
 
-  openDelete(user: IAllEmployees) {
+  openDelete(user: Employee) {
     this.selectedUser.set(user);
+    if (user.active) {
     this.showDeleteModal.set(true);
+    } else {
+      alert('Selected user is InActive')
+    }
   }
 
-  onDelete(item: IAllEmployees) {
-    const id = item.employeeId;
+  onDelete(item: Employee) {
+    const id = item.id;
     console.log(id);
     this.deleteEmployee(id || 0);
     this.closeDeleteModal();
@@ -211,13 +257,15 @@ export class Employees implements OnInit {
   submitModal = (user: Employee) => {
     console.log(user);
     const updatedDeatils = {
-      employeeId: this.employeeID || undefined,
-      employeeName: user.employeeName,
-      deptId: user.deptId,
-      deptName: '',
-      contactNo: user.contactNo,
-      emailId: user.emailId,
-      role: user.role,
+      // employeeId: this.employeeID || undefined,
+      // employeeName: user.employeeName,
+      // deptId: user.deptId,
+      // deptName: '',
+      // contactNo: user.contactNo,
+      // emailId: user.emailId,
+      // role: user.role,
+      ...user,
+      id: this.employeeID || undefined,
       password: 'Stixis@123',
     };
     this.clientObject = { ...updatedDeatils };

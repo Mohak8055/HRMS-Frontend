@@ -10,11 +10,23 @@
                 <div class="modal-body">
                     <div class="row col-12 mb-3">
                         <div class="col-6 mb-3">
-                            <label>Name <span class="text-danger"> *</span></label>
+                            <label>First Name <span class="text-danger"> *</span></label>
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput formControlName="employeeName" placeholder="Enter Name" />
-                                @if (employeeDetails.controls['employeeName'].errors?.['required'] &&
-                                employeeDetails.controls['employeeName'].touched) {
+                                <input matInput formControlName="firstName" placeholder="Enter First Name" />
+                                @if (employeeDetails.controls['firstName'].errors?.['required'] &&
+                                employeeDetails.controls['firstName'].touched) {
+                                <mat-error>
+                                    This is required
+                                </mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label>Last Name <span class="text-danger"> *</span></label>
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput formControlName="lastName" placeholder="Enter Last Name" />
+                                @if (employeeDetails.controls['lastName'].errors?.['required'] &&
+                                employeeDetails.controls['lastName'].touched) {
                                 <mat-error>
                                     This is required
                                 </mat-error>
@@ -24,15 +36,15 @@
                         <div class="col-6 mb-3">
                             <label>Email Id <span class="text-danger"> *</span></label>
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput formControlName="emailId" placeholder="Enter Email Id" />
-                                @if (employeeDetails.controls['emailId'].errors?.['required'] &&
-                                employeeDetails.controls['emailId'].touched) {
+                                <input matInput formControlName="email" placeholder="Enter Email Id" />
+                                @if (employeeDetails.controls['email'].errors?.['required'] &&
+                                employeeDetails.controls['email'].touched) {
                                 <mat-error>
                                     This is required
                                 </mat-error>
                                 }
-                                @if (employeeDetails.controls['emailId'].errors?.['email'] &&
-                                employeeDetails.controls['emailId'].touched) {
+                                @if (employeeDetails.controls['email'].errors?.['email'] &&
+                                employeeDetails.controls['email'].touched) {
                                 <mat-error>
                                     Enter Valid email
                                 </mat-error>
@@ -42,15 +54,16 @@
                         <div class="col-6 mb-3">
                             <label>Mobile Number<span class="text-danger"> *</span></label>
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput formControlName="contactNo" maxlength="10" placeholder="Enter Mobile Number" />
-                                @if (employeeDetails.controls['contactNo'].errors?.['required'] &&
-                                employeeDetails.controls['contactNo'].touched) {
+                                <input matInput formControlName="phone" maxlength="10"
+                                    placeholder="Enter Mobile Number" />
+                                @if (employeeDetails.controls['phone'].errors?.['required'] &&
+                                employeeDetails.controls['phone'].touched) {
                                 <mat-error>
                                     This is required
                                 </mat-error>
                                 }
-                                @if (employeeDetails.controls['contactNo'].errors?.['pattern'] &&
-                                employeeDetails.controls['contactNo'].touched) {
+                                @if (employeeDetails.controls['phone'].errors?.['pattern'] &&
+                                employeeDetails.controls['phone'].touched) {
                                 <mat-error>
                                     Enter Valid mobile number
                                 </mat-error>
@@ -58,51 +71,63 @@
                             </mat-form-field>
                         </div>
                         <div class="col-6 mb-3">
+                            <label class="form-label">Date of Birth<span class="text-danger"> *</span></label>
+                            <app-date-picker [placeholder]="'MM/DD/YYYY'" [minDate]="min" [maxDate]="max"
+                                [value]="employeeDetails.get('dob')?.value"
+                                (valueChange)="employeeDetails.get('dob')?.setValue($event)"
+                                [picker]="'picker1'"></app-date-picker>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Date of Joining<span class="text-danger"> *</span></label>
+                            <app-date-picker [placeholder]="'MM/DD/YYYY'" [minDate]="min" [maxDate]="max"
+                                [value]="employeeDetails.get('doj')?.value"
+                                (valueChange)="employeeDetails.get('doj')?.setValue($event)"
+                                [picker]="'picker1'"></app-date-picker>
+                        </div>
+                        <div class="col-6 mb-3">
                             <label>Role<span class="text-danger"> *</span></label>
-                            <!-- <select class="form-select" aria-label="Default select example" formControlName="role">
-                                @for (item of roles; track $index) {
-                                <option [value]="item">{{item}}</option>
-                                }
-                            </select> -->
                             <mat-form-field [ngClass]="{
-                                                'placeholder-active': employeeDetails.get('role')?.value === ''
+                                                'placeholder-active': employeeDetails.get('roleId')?.value === ''
                                               }" appearance="outline" class="w-100">
-                                <mat-select formControlName="role">
+                                <mat-select formControlName="roleId">
                                     <mat-option value="" [hidden]="true" [disabled]="false">Select Role</mat-option>
-                                    @for (item of roles; track $index) {
-                                    <mat-option [value]="item">{{item}}</mat-option>
-
+                                    @for (item of roles; track item.id) {
+                                    <mat-option [value]="item.id">{{item.name}}</mat-option>
                                     }
                                 </mat-select>
-                                <mat-error *ngIf="employeeDetails.get('role')?.invalid && employeeDetails.get('role')?.touched">
+                                <mat-error
+                                    *ngIf="employeeDetails.get('roleId')?.invalid && employeeDetails.get('roleId')?.touched">
                                     This is required
                                 </mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-6 mb-3">
                             <label>Departements<span class="text-danger"> *</span></label>
-                            <!-- <select class="form-select" aria-label="Default select example" formControlName="deptId">
-                                @for (item of departements; track $index) {
-                                <option [value]="item.deptId">{{item.deptName}}</option>
-                                }
-                                </select> -->
                             <mat-form-field [ngClass]="{
-                                                'placeholder-active': employeeDetails.get('deptId')?.value === ''
+                                                'placeholder-active': employeeDetails.get('departmentId')?.value === ''
                                               }" appearance="outline" class="w-100">
-                                <mat-select formControlName="deptId">
+                                <mat-select formControlName="departmentId">
                                     <mat-option value="" [hidden]="true" [disabled]="false">Select
                                         Departement</mat-option>
-                                    @for (item of departements; track item.deptId) {
-                                    <mat-option [value]="item.deptId">{{ item.deptName }}</mat-option>
+                                    @for (item of departements; track item.id) {
+                                    <mat-option [value]="item.id">{{ item.name }}</mat-option>
                                     }
                                 </mat-select>
-                                <mat-error *ngIf="employeeDetails.get('deptId')?.invalid && employeeDetails.get('deptId')?.touched">
+                                <mat-error
+                                    *ngIf="employeeDetails.get('departmentId')?.invalid && employeeDetails.get('departmentId')?.touched">
                                     This is required
                                 </mat-error>
                             </mat-form-field>
-                        </div>
-                    </div>
-                </div>
+                            </div>
+                            @if (isEdit) {
+                            <div class="col-12">
+                                <mat-slide-toggle formControlName="active" (change)="onToggle($event)" color="primary">
+                                    {{ employeeDetails.get('active')?.value ? 'Active' : 'InActive' }}
+                                </mat-slide-toggle>
+                            </div>
+                            }
+                            </div>
+                            </div>
 
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" (click)="closeModal()">Cancel</button>

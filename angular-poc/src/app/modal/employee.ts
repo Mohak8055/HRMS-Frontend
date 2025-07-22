@@ -69,3 +69,7 @@ export interface ISaveEmployee {
   ErmEmpExperiences: ErmEmpExperience[]
 }
 
+export interface IDelete {
+  id: number,
+  status: boolean
+}

@@ -12,13 +12,10 @@
                    <div class="col-4">Date19 Jul, 2025</div>
                     <div class="col-4">Shift Time 09:30 to 18:30</div>
                      <div class="col-4">Shift Type GS</div>
-                     </div>
-                     <app-custom-table 
-            [columns]="columns" 
-            [data]="data" 
-            >
-            </app-custom-table>
-                </div>
+                    </div>
+                    <app-custom-table [columns]="columns" [data]="data" [showPagination]="false">
+                    </app-custom-table>
+                    </div>
 
                 <!-- <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" (click)="closeModal()">Cancel</button>

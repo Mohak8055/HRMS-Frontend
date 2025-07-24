@@ -1,59 +1,74 @@
-# AngularPoc
+# Employee Management System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.4.
+A role-based authentication Angular application with dynamic routing, dashboards for admin and employee, and a modular sidebar.
 
-## Development server
+## Features
+- Role-based login (Admin/Employee)
+- Dynamic sidebar and routing based on user role
+- Static credentials for demo (can be replaced with API)
+- Separate dashboards for Admin and Employee
+- Angular Standalone Components
+- Responsive UI with Bootstrap/Material
 
-To start a local development server, run:
+## Prerequisites
+- Node.js (v18+ recommended)
+- npm (v9+ recommended)
+- Angular CLI (`npm install -g @angular/cli`)
 
-```bash
+## Installation
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/NikhileshGarol/AngularPoc.git
+   cd AngularPoc/angular-poc
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+
+## Running the Application
+```sh
 ng serve
 ```
+- The app will be available at `http://localhost:4200/`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+## Usage
+1. **Login:**
+   - Enter the credentials above and select the role.
+   - On successful login, you will be routed to the respective dashboard.
+2. **Sidebar:**
+   - Menu items change dynamically based on the logged-in role.
+3. **Logout:**
+   - Click the logout button in the sidebar to end the session.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+## Project Structure
+```
+angular-poc/
+  src/
+    app/
+      login/                # Login component
+      admin-dashboard/      # Admin dashboard component
+      employee-dashboard/   # Employee dashboard component
+      sidebar/              # Sidebar component
+      services/
+        auth.ts             # Auth service (role-based logic)
+      ...
+  angular.json
+  package.json
+  README.md
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Customization
+- To switch to API-based authentication, update `auth.ts` to call your backend and store the role in localStorage.
+- Add more roles or menu items by editing the sidebar component's menu array.
 
-```bash
-ng generate --help
-```
+## Troubleshooting
+- If you see errors about missing modules, run `npm install` again.
+- For port conflicts, change the port with `ng serve --port 4300`.
 
-## Building
+## License
+MIT
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Author
+Nikhilesh Garol

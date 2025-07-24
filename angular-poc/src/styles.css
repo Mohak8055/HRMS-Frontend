@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-
+* {
+  font-family: 'Proxima Nova Regular', sans-serif;
+}
 html,
 body {
   height: 100%;
@@ -9,15 +11,13 @@ body {
 }
 body {
   margin: 0;
-  font-family: Proxima Nova Regular, sans-serif;
   font-size: 14px;
 }
 .form-label {
   margin-bottom : 0;
 }
 .btn-yes {
-  font-family: Proxima Nova Regular, sans-serif;
-  font-size: 15px;
+  /* font-size: 15px; */
   background-color: #2e82db;
   color: white;
 

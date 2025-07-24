@@ -11,6 +11,10 @@ import {
 } from '../../components/custom-table/custom-table';
 import { CreateUpdateEmployeeModal } from '../../components/modals/create-update-employee-modal/create-update-employee-modal';
 import { ToastServices } from '../../services/toast/toast-services';
+import { SearchBar } from '../../components/search-bar/search-bar';
+import { PageEvent } from '@angular/material/paginator';
+import { DeptOptions } from '../../modal/employee';
+
 
 @Component({
   selector: 'app-employees',
@@ -20,6 +24,7 @@ import { ToastServices } from '../../services/toast/toast-services';
     Breadcrum,
     CustomTable,
     CreateUpdateEmployeeModal,
+    SearchBar,
   ],
   templateUrl: './employees.html',
   styleUrl: './employees.css',
@@ -28,14 +33,15 @@ export class Employees implements OnInit {
   clientS = inject(ClientService);
   employeeServices = inject(EmployeeServices);
   toast = inject(ToastServices);
+  params = {
+    page: 1,
+    pageSize: 10,
+  };
+  loading = true;
+  totalEmployees = 0;
+  departements: DeptOptions[] = [];
+  roles: any[] = [];
   clientObject: Employee = {
-    // employeeId: 0,
-    // employeeName: '',
-    // deptId: 0,
-    // deptName: '',
-    // contactNo: '',
-    // emailId: '',
-    // role: '',
     id: undefined,
     email: '',
     phone: '',
@@ -75,15 +81,17 @@ export class Employees implements OnInit {
     },
     { key: 'email', label: 'Email Id', type: 'text' },
     { key: 'phone', label: 'Mobile Number' },
-    { key: 'departmentId', label: 'Departement Name', 
-      render: (row: any) => row?.department?.name
-     },
-    { key: 'roleId', label: 'Role', 
-      render: (row: any) => row?.role?.name
-     },
-    { key: 'active', label: 'Status' ,
-      render: (row: any) => row?.active ? 'Active' : 'InActive'
-    }
+    {
+      key: 'departmentId',
+      label: 'Departement Name',
+      render: (row: any) => row?.department?.name,
+    },
+    { key: 'roleId', label: 'Role', render: (row: any) => row?.role?.name },
+    {
+      key: 'active',
+      label: 'Status',
+      render: (row: any) => (row?.active ? 'Active' : 'InActive'),
+    },
   ];
 
   actions = [
@@ -106,6 +114,48 @@ export class Employees implements OnInit {
 
   ngOnInit(): void {
     this.fetchEmployees();
+    this.getAllRoles();
+    this.fetchAllDepartements();
+  }
+
+  getAllRoles() {
+    this.employeeServices.getAllRoles().subscribe({
+      next: (res) => {
+        const formattedRoles = res.map((role: any) => ({
+          label: role.name,
+          value: role.name,
+        }));
+        const rolesField = this.searchFields.find(
+          (field) => field.value === 'role'
+        );
+        if (rolesField) {
+          rolesField.options = formattedRoles;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  fetchAllDepartements() {
+    this.employeeServices.getAllDepartements().subscribe({
+      next: (res) => {
+        const formattedDept = res.map((dept: any) => ({
+          label: dept.name,
+          value: dept.name,
+        }));
+        const deptField = this.searchFields.find(
+          (field) => field.value === 'department'
+        );
+        if (deptField) {
+          deptField.options = formattedDept;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   saveEmployee() {
@@ -114,8 +164,8 @@ export class Employees implements OnInit {
       this.employeeServices.createEmployee(this.clientObject).subscribe({
         next: (res) => {
           this.fetchEmployees();
-            this.toast.success(res.message || 'Employee created successfully.');
-            this.closeModal();
+          this.toast.success(res.message || 'Employee created successfully.');
+          this.closeModal();
           // if (res.result) {
           //   this.fetchEmployees();
           //   this.toast.success(res.message || 'Employee created successfully.');
@@ -148,15 +198,25 @@ export class Employees implements OnInit {
     }
   }
 
+  handlePageChange(event: PageEvent) {
+    this.params.page = event.pageIndex + 1;
+    this.params.pageSize = event.pageSize;
+    this.fetchEmployees();
+  }
 
   fetchEmployees() {
-    this.employeeServices.getAllEmployees().subscribe({
+    this.loading = true;
+    this.employeeServices.getAllEmployees(this.params).subscribe({
       next: (res) => {
-        this.clientsList = res;
-        console.log(this.clientsList);
+        this.clientsList = res?.users;
+        this.totalEmployees = res?.total;
       },
       error: (err) => {
         console.log('Something went wrong', err);
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
       },
     });
   }
@@ -178,11 +238,11 @@ export class Employees implements OnInit {
     const payload = {
       id: id,
       status: false,
-    }
+    };
     this.employeeServices.deleteEmployee(payload).subscribe({
       next: (res) => {
-          this.toast.success(res.message || 'Employee deteled successfully');
-          this.fetchEmployees();
+        this.toast.success(res.message || 'Employee deteled successfully');
+        this.fetchEmployees();
         // if (res.result) {
         //   this.toast.success(res.message || 'Employee deteled successfully');
         //   this.fetchEmployees();
@@ -230,9 +290,9 @@ export class Employees implements OnInit {
   openDelete(user: Employee) {
     this.selectedUser.set(user);
     if (user.active) {
-    this.showDeleteModal.set(true);
+      this.showDeleteModal.set(true);
     } else {
-      alert('Selected user is InActive')
+      alert('Selected user is InActive');
     }
   }
 
@@ -272,4 +332,35 @@ export class Employees implements OnInit {
     this.selectedUser.set({ ...updatedDeatils });
     this.saveEmployee();
   };
+
+  searchFields = [
+    { label: 'Name', value: 'name', type: 'text' },
+    { label: 'Mobile Number', value: 'phone', type: 'text' },
+    { label: 'Email Address', value: 'email', type: 'text' },
+    { label: 'Department', value: 'department', type: 'select', options: [] },
+    { label: 'Role', value: 'role', type: 'select', options: [] },
+    {
+      label: 'Status',
+      value: 'active',
+      type: 'select',
+      options: [
+        { label: 'Active', value: 'true' },
+        { label: 'InActive', value: 'false' },
+      ],
+    },
+  ];
+  onSearchHandler(event: { by: string; value: string }) {
+    console.log(event.by, event.value);
+    const params = {
+      ...this.params,
+      search: {
+        key: event.by,
+        value: event.value,
+      },
+    };
+    this.params = params;
+    this.fetchEmployees();
+    console.log('Search request received:', event);
+    // Trigger API call or filter logic here
+  }
 }

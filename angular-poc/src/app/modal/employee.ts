@@ -73,3 +73,8 @@ export interface IDelete {
   id: number,
   status: boolean
 }
+
+export interface DeptOptions {
+  label: string;
+  value: string;
+}

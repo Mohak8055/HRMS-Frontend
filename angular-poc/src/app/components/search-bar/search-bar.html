@@ -1,0 +1,39 @@
+<div class="search-container">
+    <label>Search By:</label>
+  <mat-form-field appearance="outline" class="search-by-select">
+    <!-- <mat-label>Search By</mat-label> -->
+    <mat-select [formControl]="searchByControl" placeholder="Select search by">
+      <mat-option *ngFor="let option of searchOptions" [value]="option.value">
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="searchByControl.errors?.['required']">
+      Select Search By
+    </mat-error>
+  </mat-form-field>
+
+  <ng-container [ngSwitch]="selectedSearchOption?.type">
+  <!-- Text Input -->
+  <mat-form-field *ngSwitchCase="'text'" appearance="outline">
+    <input placeholder="Search.." matInput [formControl]="searchValueControl" (keyup.enter)="onSearch()" />
+    <mat-error *ngIf="searchValueControl.errors?.['required']">
+      Search value is required
+    </mat-error>
+  </mat-form-field>
+  <!-- Dropdown -->
+  <mat-form-field *ngSwitchCase="'select'" appearance="outline">
+    <mat-select placeholder="Select" [formControl]="searchValueControl">
+      <mat-option *ngFor="let opt of selectedSearchOption?.options" [value]="opt.value">
+        {{ opt.label }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="searchValueControl.errors?.['required']">Selection is required</mat-error>
+  </mat-form-field>
+</ng-container>
+  <button class="search-btn" mat-icon-button (click)="onSearch()">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button class="search-btn" mat-icon-button (click)="onClear()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>

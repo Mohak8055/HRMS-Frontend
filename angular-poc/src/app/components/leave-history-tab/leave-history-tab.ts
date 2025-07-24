@@ -25,7 +25,7 @@ export class LeaveHistoryTab implements OnInit {
   }
 
   ngOnInit(): void {
-    const userId = this.userDeatils?.employeeId;
+    const userId = this.userDeatils?.userId;
     //API Get Leaves by userId
     if (userId) {
       this.getLeaveById(userId);

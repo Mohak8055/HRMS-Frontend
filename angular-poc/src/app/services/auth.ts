@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 interface User {
   username: string;
   password: string;
-  role: 'admin' | 'Employee';
+  role: 'Admin' | 'Employee';
 }
 
 @Injectable({
@@ -14,10 +14,10 @@ interface User {
 })
 export class Auth {
   private staticUsers: User[] = [
-    { username: 'admin@example.com', password: 'admin123', role: 'admin' },
+    { username: 'admin@stixis.com', password: 'Stixis@123', role: 'Admin' },
     {
-      username: 'employee@example.com',
-      password: 'employee123',
+      username: 'employee@stixis.com',
+      password: 'Stixis@123',
       role: 'Employee',
     },
   ];

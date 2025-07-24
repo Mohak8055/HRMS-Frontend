@@ -1,0 +1,23 @@
+.search-container {
+    display: flex;
+}
+
+.search-by-select {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.search-btn {
+    background-color: #2e82db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-left: 10px;
+}
+
+label {
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: 10px;
+}

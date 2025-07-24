@@ -178,11 +178,11 @@ export class Leave implements OnInit {
 
   //API Save/Add Leave
   addLeaveReq(data: any) {
-    const userId = this.userDeatils?.employeeId;
+    const userId = this.userDeatils?.userId;
     const numberOfDays = this.calculateNoOfDays(data.fromDate, data.toDate);
     const req: ILeaveCreate = {
       leaveType: data.leaveType,
-      employeeId: this.userDeatils?.employeeId,
+      employeeId: userId,
       noOfDays: numberOfDays,
       fromDate: data.fromDate,
       toDate: data.toDate,

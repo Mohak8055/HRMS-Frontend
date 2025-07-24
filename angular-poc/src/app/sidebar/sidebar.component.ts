@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Auth } from '../services/auth';
 import { CommonModule } from '@angular/common';

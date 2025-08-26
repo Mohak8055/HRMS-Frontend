@@ -217,14 +217,60 @@ export class Leave implements OnInit {
   }
 
   onSubmit() {
-    this.leaveForm.updateValueAndValidity();
-    if (this.leaveForm.invalid) {
-      this.leaveForm.markAllAsTouched();
-      return;
-    }
-    console.log('first) ',this.leaveForm.value)
-    this.addLeaveReq(this.leaveForm.value);
+  this.leaveForm.updateValueAndValidity();
+  if (this.leaveForm.invalid) {
+    this.leaveForm.markAllAsTouched();
+    return;
   }
+
+  const formData = this.leaveForm.value;
+
+  // ✅ Map recipient based on applyingTo dropdown
+  let recipient_mail = '';
+  if (formData.applyingTo === '2') {
+    recipient_mail = 'sinchanargowda7@gmail.com'; // Mahesh P
+  } else if (formData.applyingTo === '1') {
+    recipient_mail = 'gowdamohak002@gmail.com'; // John B
+  }
+
+  // ✅ Build static subject
+  const subject = 'Applying for a leave';
+
+  // ✅ Build body dynamically
+  const body = `
+Dear Sir,
+
+I am applying for a ${formData.leaveType} leave.
+
+From Date: ${formData.fromDate}
+From Session: ${formData.fromSession || 'N/A'}
+To Date: ${formData.toDate}
+To Session: ${formData.toSession || 'N/A'}
+Contact Details: ${formData.contactDetails}
+Reason: ${formData.reason}
+
+Kindly approve my request.
+
+Thank you,
+${this.userDeatils?.userName || 'Employee'}
+`;
+
+  // ✅ Call backend email API
+  this.leaveServices.sendLeaveMail({ recipient_mail, subject, body }).subscribe({
+    next: (resp) => {
+      console.log('Mail sent successfully:', resp);
+      this.toast.success('Leave request submitted and mail sent.');
+    },
+    error: (err) => {
+      console.error('Error sending mail:', err);
+      this.toast.error('Leave applied but failed to send mail.');
+    },
+  });
+
+  // ✅ Also save leave request in DB
+  this.addLeaveReq(formData);
+}
+
 
   resetForm() {
     this.leaveForm.reset({

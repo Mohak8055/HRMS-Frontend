@@ -1,31 +1,82 @@
 <div class="container">
-    <!-- <app-breadcrum [items]="[
-          { label: 'Home', url: '/admin/dashboard' },
-          { label: 'My Account', url: '/my-account' },
-        ]"></app-breadcrum> -->
-    <div class="col-12">
-        <div class="h4">Employee Information</div>
-    </div>
-    <div class="container profile-card">
-        <div class="row py-4">
-            <div class="col-6">
-                <label>Name: </label>
-                <span>{{userDetails.firstName + " " + userDetails?.lastName}}</span>
-            </div>
-            <div class="col-6">
-                <label>Email Id: </label>
-                <span>{{userDetails.email}}</span>
-            </div>
-        </div>
-        <div class="row pb-4">
-            <div class="col-6">
-                <label>Employee ID: </label>
-                <span>{{userDetails.userId}}</span>
-            </div>
-            <div class="col-6">
-                <label>Contact No.: </label>
-                <span>{{userDetails.phone}}</span>
-            </div>
+    <!-- Header Row -->
+    <div class="row mb-4">
+        <div class="col">
+            <h4>My Account</h4>
         </div>
     </div>
+    <form class="row" [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
+        <div class="row col-md-10 col-sm-12">
+            <div class="col-md-6 col-sm-12 mb-1">
+                <label>First Name <span class="text-danger"> *</span></label>
+                <mat-form-field appearance="outline" class="w-100">
+                    <input matInput formControlName="firstName" placeholder="Enter First Name" />
+                    @if (userDetailsForm.controls['firstName'].errors?.['required'] &&
+                    userDetailsForm.controls['firstName'].touched) {
+                    <mat-error>
+                        This is required
+                    </mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-1">
+                <label>Last Name <span class="text-danger"> *</span></label>
+                <mat-form-field appearance="outline" class="w-100">
+                    <input matInput formControlName="lastName" placeholder="Enter Last Name" />
+                    @if (userDetailsForm.controls['lastName'].errors?.['required'] &&
+                    userDetailsForm.controls['lastName'].touched) {
+                    <mat-error>
+                        This is required
+                    </mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-1">
+                <label>Email <span class="text-danger"> *</span></label>
+                <mat-form-field appearance="outline" class="w-100">
+                    <input matInput formControlName="email" placeholder="Enter Email" />
+                    @if (userDetailsForm.controls['email'].errors?.['required'] &&
+                    userDetailsForm.controls['email'].touched) {
+                    <mat-error>
+                        This is required
+                    </mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-1">
+                <label>Mobile Number <span class="text-danger"> *</span></label>
+                <mat-form-field appearance="outline" class="w-100">
+                    <input matInput formControlName="phone" placeholder="Enter Mobile Number" />
+                    @if (userDetailsForm.controls['phone'].errors?.['required'] &&
+                    userDetailsForm.controls['phone'].touched) {
+                    <mat-error>
+                        This is required
+                    </mat-error>
+                    }
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row col-md-2 col-sm-12">
+            <div class="avatar-wrapper">
+                @if (userDetails.profileImageUrl) {
+                <img [src]="userDetails.profileImageUrl" alt="Profile Avatar" class="avatar-img" />
+                } @else {
+                <ng-container *ngTemplateOutlet="defaultAvatar"></ng-container>
+                }
+                <ng-template #defaultAvatar>
+                    <img src="images/van.png" alt="Default Avatar" class="avatar-img" />
+                </ng-template>
+                <div style="margin-left: 40px;" class="mt-2">
+                    <input #fileInput type="file" (change)="onFileSelected($event)" class="d-none" />
+                    <button type="button" (click)="fileInput.click()" class="btn btn-sm btn-outline-primary">Upload
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div style="display: inline-flex; gap: 10px;" class="col-2">
+            <button type="submit" class="btn btn-yes">Submit</button>
+            <button type="button" class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+ 
 </div>

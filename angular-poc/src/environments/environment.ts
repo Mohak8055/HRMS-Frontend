@@ -10,5 +10,6 @@ export const environment = {
     updateEmployee: '/user/update',
     user: '/user',
     getAllEmployees: '/user/all-user',
+    sendMail: '/leave-mail/send',
   }
 };

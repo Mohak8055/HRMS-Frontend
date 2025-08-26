@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,15 +8,21 @@ import {
 import { EmployeeServices } from '../../../services/employee-services';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { ToastServices } from '../../../services/toast/toast-services';
 import { CommonModule } from '@angular/common';
-import { Employee, IAllEmployees } from '../../../modal/client';
+import { Employee } from '../../../modal/client';
 import { DatePicker } from '../../date-picker/date-picker';
 import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-create-update-employee-modal',
   standalone: true,
-  imports: [ReactiveFormsModule, MatSelectModule, MatInputModule, CommonModule, DatePicker,
+  imports: [
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatInputModule,
+    CommonModule,
+    DatePicker,
     MatSlideToggleModule
   ],
   templateUrl: './create-update-employee-modal.html',
@@ -24,11 +30,14 @@ import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/sl
 })
 export class CreateUpdateEmployeeModal implements OnChanges {
   employeeService = inject(EmployeeServices);
+  toast = inject(ToastServices);
+
   @Input() visible: boolean = false;
   @Output() close = new EventEmitter<void>();
   @Input() submit!: (data: Employee) => void;
   @Input() formData: Employee | null = null;
   @Input() isEdit: boolean = false;
+
   min = new Date(1900, 0, 1);
   max = new Date(2100, 11, 31);
 
@@ -36,7 +45,6 @@ export class CreateUpdateEmployeeModal implements OnChanges {
   departements: any[] = [];
 
   employeeDetails: FormGroup = new FormGroup({
-    // employeeId: new FormControl(0),
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', [Validators.required]),
     departmentId: new FormControl('', [Validators.required]),
@@ -51,22 +59,8 @@ export class CreateUpdateEmployeeModal implements OnChanges {
   onToggle(event: MatSlideToggleChange): void {
     const isActive = event.checked;
     console.log('Toggled:', isActive);
-    // Update the form control manually if needed
     this.employeeDetails.get('active')?.setValue(isActive);
   }
-
-  // ngOnInit() {
-  //   this.getAllRoles();
-  //   this.fetchAllDepartements();
-  //   console.log('form valuesss',this.formData)
-  //   if (this.formData) {
-  //     console.log('form valuesss',this.formData)
-  //     // Populate form with edit values
-  //     this.employeeDetails.patchValue({
-  //       ...this.formData,
-  //     });
-  //   }
-  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['formData'] && this.formData) {
@@ -82,8 +76,6 @@ export class CreateUpdateEmployeeModal implements OnChanges {
         departmentId: '',
         managerId: 0,
         active: true,
-        // createdAt: '',
-        // updatedAt: '',
         password: '',
         roleId: '',
       });
@@ -118,17 +110,82 @@ export class CreateUpdateEmployeeModal implements OnChanges {
   }
 
   closeModal() {
+    this.employeeDetails.reset({
+      email: '',
+      phone: '',
+      firstName: '',
+      lastName: '',
+      dob: '',
+      doj: '',
+      departmentId: '',
+      managerId: 0,
+      active: true,
+      password: '',
+      roleId: '',
+    });
     this.close.emit();
   }
+
   onSubmit() {
     if (this.employeeDetails.valid) {
-      if (this.submit) {
-        this.submit(this.employeeDetails.value);
-        
-      }
-      console.log('submitted d',this.employeeDetails.value)
+      const tempPassword = Math.random().toString(36).slice(-8);
+
+      const employeeData = {
+        ...this.employeeDetails.value,
+        password: tempPassword,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      console.log('Generated temp password (use for login):', tempPassword);
+
+      this.employeeService.createEmployee(employeeData).subscribe({
+        next: (res) => {
+          console.log('Employee created successfully:', res);
+          
+          // Construct email data
+          const emailSubject = 'Welcome to the Team! Your Temporary Password';
+          const emailBody = `
+Dear ${this.employeeDetails.value.firstName},
+
+Welcome aboard! An account has been created for you.
+
+Your temporary password is: ${tempPassword}
+
+Please log in to the employee portal and change your password at your earliest convenience.
+
+Best regards,
+HR Department
+          `;
+
+          const emailPayload = {
+            // Your backend API for 'leave-mail/send' expects 'recipient_mail' as the key
+            recipient_mail: this.employeeDetails.value.email,
+            subject: emailSubject,
+            body: emailBody,
+          };
+
+          // Call the service to send the email
+          this.employeeService.sendNewEmployeeMail(emailPayload).subscribe({
+            next: (mailRes: any) => {
+              console.log('Email sent successfully:', mailRes);
+              this.toast.success('Employee created and welcome email sent successfully!');
+              this.closeModal();
+            },
+            error: (mailErr: any) => {
+              console.error('Error sending welcome email:', mailErr);
+              this.toast.error('Employee created, but failed to send welcome email.');
+              this.closeModal();
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Error creating employee:', err);
+          this.toast.error('Failed to create employee.');
+        },
+      });
     } else {
-      console.log(this.employeeDetails)
+      console.log(this.employeeDetails);
     }
   }
 }

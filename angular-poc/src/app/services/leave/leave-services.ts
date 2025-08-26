@@ -11,6 +11,11 @@ export class LeaveServices {
   http = inject(HttpClient);
   apibaseUrl = 'https://freeapi.miniprojectideas.com/api/EmployeeLeave';
 
+  sendLeaveMail(payload: any) {
+  return this.http.post<any>('http://127.0.0.1:8000/leave-mail/send', payload);
+}
+
+
   addLeave(payload: ILeaveCreate): Observable<IEmployeeResponse> {
     return this.http.post<IEmployeeResponse>(
       `${this.apibaseUrl}/AddLeave`,

@@ -138,7 +138,7 @@
       <app-leave-history-tab></app-leave-history-tab>
     </ng-template>
   </mat-tab>
-  @if (userDeatils.role === 'Admin Department Employee') {
+  @if (userDeatils.roles[0].name === 'Admin') {
   <mat-tab label="Leave Requests">
     <ng-template matTabContent>
       <app-leave-request-tab></app-leave-request-tab>

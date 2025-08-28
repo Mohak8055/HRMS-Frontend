@@ -1,13 +1,14 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { LeaveServices } from '../../services/leave/leave-services';
 import { Auth } from '../../services/auth';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { ConfirmationModal } from "../confirmation-modal/confirmation-modal";
 import { ToastServices } from '../../services/toast/toast-services';
 
 @Component({
   selector: 'app-leave-request-tab',
-  imports: [DatePipe, ConfirmationModal],
+  standalone: true,
+  imports: [DatePipe, ConfirmationModal, CommonModule],
   templateUrl: './leave-request-tab.html',
   styleUrl: './leave-request-tab.css',
 })
@@ -24,17 +25,32 @@ export class LeaveRequestTab implements OnInit {
   confirmationMessage: string | '' = '';
 
   ngOnInit(): void {
-    //API Get All Leaves
     this.fetchAllLeaves();
   }
+  calculateNoOfDays(fromDateIso: string, toDateIso: string): number {
+    const fromDate = new Date(fromDateIso);
+    const toDate = new Date(toDateIso);
 
-  //API Get all leaves req
+    const fromUTC = Date.UTC(
+      fromDate.getUTCFullYear(),
+      fromDate.getUTCMonth(),
+      fromDate.getUTCDate()
+    );
+    const toUTC = Date.UTC(
+      toDate.getUTCFullYear(),
+      toDate.getUTCMonth(),
+      toDate.getUTCDate()
+    );
+
+    const daysDiff = Math.floor((toUTC - fromUTC) / (1000 * 60 * 60 * 24)) + 1;
+
+    return daysDiff > 0 ? daysDiff : 0;
+  }
+
   fetchAllLeaves() {
     this.leaveServices.getAllLeaves().subscribe({
       next: (res) => {
-        if (res.result) {
-          this.allLeaveRequests = res.data;
-        }
+        this.allLeaveRequests = res;
       },
       error: (err) => {
         console.log('Something went wrong', err);
@@ -42,16 +58,11 @@ export class LeaveRequestTab implements OnInit {
     });
   }
 
-  //API Approve Leave
   handleApproveLeave(id: number) {
     this.leaveServices.approveLeaveById(id).subscribe({
       next: (res) => {
-        if (res.result) {
-          this.toast.success(res.message || 'Leave request approved');
-          this.fetchAllLeaves();
-        } else {
-          this.toast.warning(res.message || 'Something went wrong');
-        }
+        this.toast.success('Leave request approved');
+        this.fetchAllLeaves();
       },
       error: (err) => {
         this.toast.error(err.message || 'Something went wrong');
@@ -60,16 +71,11 @@ export class LeaveRequestTab implements OnInit {
     })
   }
 
-  //API Approve Leave
   handleRejectLeave(id: number) {
     this.leaveServices.rejectLeaveById(id).subscribe({
       next: (res) => {
-        if (res.result) {
-          this.toast.success(res.message || 'Leave request rejected');
+          this.toast.success('Leave request rejected');
           this.fetchAllLeaves();
-        } else {
-          this.toast.warning(res.message || 'Something went wrong');
-        }
       },
       error: (err) => {
         this.toast.error(err.message || 'Something went wrong');

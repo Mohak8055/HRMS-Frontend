@@ -32,7 +32,7 @@ import { Breadcrum } from '../breadcrum/breadcrum';
     LeaveRequestTab,
     LeaveHistoryTab,
     MatSelectModule,
-    MatInputModule,
+    MatInputModule
   ],
   templateUrl: './leave.html',
   styleUrl: './leave.css',
@@ -179,20 +179,18 @@ export class Leave implements OnInit {
   //API Save/Add Leave
   addLeaveReq(data: any) {
     const userId = this.userDeatils?.userId;
-    const numberOfDays = this.calculateNoOfDays(data.fromDate, data.toDate);
     const req: ILeaveCreate = {
-      leaveType: data.leaveType,
-      employeeId: userId,
-      noOfDays: numberOfDays,
-      fromDate: data.fromDate,
-      toDate: data.toDate,
-      details: data.reason,
+      leave_type: data.leaveType,
+      user_id: userId,
+      start_date: data.fromDate,
+      end_date: data.toDate,
+      reason: data.reason,
     };
     this.leaveServices.addLeave(req).subscribe({
       next: (resp) => {
-        if (resp.result) {
-          this.toast.success(resp.message || 'Leave applied successfully');
-          // this.getLeaveById(userId);
+        if (resp) {
+          this.toast.success('Leave applied successfully');
+          this.getLeaveById(userId);
           this.leaveForm.reset({
             leaveType: '',
             fromDate: null,
@@ -206,7 +204,7 @@ export class Leave implements OnInit {
           });
           this.leaveForm.setErrors(null);
         } else {
-          this.toast.success(resp.message || 'Something went wrong');
+          this.toast.success('Something went wrong');
         }
       },
       error: (err) => {
@@ -270,6 +268,19 @@ ${this.userDeatils?.userName || 'Employee'}
   // ✅ Also save leave request in DB
   this.addLeaveReq(formData);
 }
+
+getLeaveById(id: number) {
+   this.leaveServices.getAllLeavesByEmployeeId(id).subscribe({
+      next: (response) => {
+        if (response.result) {
+          // The history tab will be updated automatically
+        }
+      },
+      error: (err) => {
+        console.log('Something Went wrong', err);
+      },
+    });
+  }
 
 
   resetForm() {

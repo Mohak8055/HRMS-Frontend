@@ -25,14 +25,13 @@ export class ILeaveByIdObject {
 }
 
 export interface ILeaveCreate {
-  leaveId?: number
-  employeeId: number
-  fromDate: string
-  toDate: string
-  noOfDays: number
-  leaveType: string
-  details: string
-  isApproved?: boolean
-  approvedDate?: string
+  leave_type: string
+  user_id: number
+  start_date: string
+  end_date: string
+  reason: string
 }
 
+export interface ILeaveUpdate {
+    status: string;
+}

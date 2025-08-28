@@ -63,12 +63,7 @@ export class EmployeeServices {
     return this.http.get<any>(`${this.apiBaseUrl}${environment.endpoints.getAllDepartements}`);
   }
 
-  /**
-   * Sends a new employee welcome email with a temporary password.
-   * @param emailData An object containing the recipient's email, subject, and body.
-   * @returns An observable with the response from the email API.
-   */
-  sendNewEmployeeMail(emailData: { recipient_mail: string, subject: string, body: string }): Observable<any> {
-    return this.http.post<any>(`${this.apiBaseUrl}/leave-mail/send`, emailData);
+  sendNewEmployeeMail(emailData: { recipient_mail: string, subject: string, employee_name: string, temporary_password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}/employee-mail/send-welcome-email`, emailData);
   }
 }

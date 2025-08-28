@@ -143,26 +143,12 @@ export class CreateUpdateEmployeeModal implements OnChanges {
         next: (res) => {
           console.log('Employee created successfully:', res);
           
-          // Construct email data
-          const emailSubject = 'Welcome to the Team! Your Temporary Password';
-          const emailBody = `
-Dear ${this.employeeDetails.value.firstName},
-
-Welcome aboard! An account has been created for you.
-
-Your temporary password is: ${tempPassword}
-
-Please log in to the employee portal and change your password at your earliest convenience.
-
-Best regards,
-HR Department
-          `;
-
+          // Construct email data for the NEW dedicated email service
           const emailPayload = {
-            // Your backend API for 'leave-mail/send' expects 'recipient_mail' as the key
             recipient_mail: this.employeeDetails.value.email,
-            subject: emailSubject,
-            body: emailBody,
+            subject: 'Welcome to the Team! Your Login Credentials',
+            employee_name: `${this.employeeDetails.value.firstName} ${this.employeeDetails.value.lastName}`,
+            temporary_password: tempPassword,
           };
 
           // Call the service to send the email

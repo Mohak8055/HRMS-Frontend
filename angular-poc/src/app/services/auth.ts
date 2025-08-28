@@ -3,97 +3,40 @@ import { Router } from '@angular/router';
 import { AuthServices } from './auth-services';
 import { Observable } from 'rxjs';
 
-interface User {
-  username: string;
-  password: string;
-  role: 'Admin' | 'Employee';
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
-  private staticUsers: User[] = [
-    { username: 'admin@stixis.com', password: 'Stixis@123', role: 'Admin' },
-    {
-      username: 'employee@stixis.com',
-      password: 'Stixis@123',
-      role: 'Employee',
-    },
-  ];
   private tokenKey = 'authData';
-  private loggedIn = false;
   router = inject(Router);
   authServices = inject(AuthServices);
 
-  constructor() {
-    // Initialize from localStorage
-    const stored = localStorage.getItem('loggedIn');
-    this.loggedIn = stored === 'true';
-  }
-
-  // login() {
-  //   this.loggedIn = true;
-  //   localStorage.setItem('loggedIn', 'true');
-  //   this.router.navigateByUrl('/home');
-  // }
-
   login(data: any): Observable<boolean> {
-    const payload = {
-      email: data.username,
-      password: data.password,
-    };
     return new Observable<boolean>((observer) => {
-    this.authServices.login(payload).subscribe({
-      next: (response) => {
-        if (response) {
-          localStorage.setItem('authData', JSON.stringify(response));
-          observer.next(true);
-        } else {
-          observer.next(false);
-        }
-        observer.complete();
-      },
-      error: (err) => {
-        console.error('Login failed', err);
-        observer.next(false);
-        observer.complete();
-      }
-    });
-  });
+      this.authServices.login(data).subscribe({
+        next: (response) => {
+          if (response && response.access_token) {
+            localStorage.setItem('authData', JSON.stringify(response));
+            observer.next(true);
+          } else {
+            observer.next(false);
+          }
+          observer.complete();
+        },
+        error: (err) => {
+          console.error('Login failed', err);
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
-
-  // login(username: string, password: string): boolean {
-  //   console.log(username, password)
-  //   const user = this.staticUsers.find(
-  //     (u) => u.username === username && u.password === password
-  //   );
-  //   console.log(user)
-  //   if (user) {
-  //     const tokenPayload =
-  //       JSON.stringify({ username: user.username, role: user.role })
-
-  //     localStorage.setItem(this.tokenKey, tokenPayload);
-  //     console.log(tokenPayload)
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  // logout() {
-  //   this.loggedIn = false;
-  //   localStorage.setItem('loggedIn', 'false');
-  //   this.router.navigateByUrl('/login');
-  // }
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     this.router.navigateByUrl('/login');
   }
 
-  // isAuthenticated(): boolean {
-  //   return this.loggedIn;
-  // }
   isAuthenticated(): boolean {
     return !!localStorage.getItem(this.tokenKey);
   }
@@ -109,17 +52,16 @@ export class Auth {
     }
   }
 
-  getUserDetails(): {} | any {
+  getUserDetails(): any {
     const token = localStorage.getItem(this.tokenKey);
     if (!token) return null;
     try {
-      const parsed = JSON.parse(token);
-      return parsed;
+      return JSON.parse(token);
     } catch {
       return null;
     }
   }
-  // Added the setUserDetails method to update the user details in local storage
+
   setUserDetails(userDetails: any): void {
     localStorage.setItem(this.tokenKey, JSON.stringify(userDetails));
   }

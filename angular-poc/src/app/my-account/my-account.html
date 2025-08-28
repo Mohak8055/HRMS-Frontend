@@ -1,5 +1,4 @@
 <div class="container">
-    <!-- Header Row -->
     <div class="row mb-4">
         <div class="col">
             <h4>My Account</h4>
@@ -79,4 +78,42 @@
         </div>
     </form>
  
+    <hr>
+
+    <div class="row mt-4">
+        <div class="col d-flex justify-content-between align-items-center">
+            <h4>Reset Password</h4>
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="togglePasswordReset()">
+                {{ showPasswordReset ? 'Cancel' : 'Change Password' }}
+            </button>
+        </div>
+    </div>
+
+    @if (showPasswordReset) {
+        <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+            <div class="row">
+                <div class="col-md-4 col-sm-12 mb-1">
+                    <label>Old Password <span class="text-danger"> *</span></label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput formControlName="old_password" type="password" placeholder="Enter Old Password" />
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-1">
+                    <label>New Password <span class="text-danger"> *</span></label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput formControlName="new_password" type="password" placeholder="Enter New Password" />
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-1">
+                    <label>Confirm Password <span class="text-danger"> *</span></label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput formControlName="confirm_password" type="password" placeholder="Confirm New Password" />
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-yes">Reset Password</button>
+                </div>
+            </div>
+        </form>
+    }
 </div>

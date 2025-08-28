@@ -22,8 +22,8 @@ export class MyAccount {
 
   userDetails: any = {};
   selectedFile: File | null = null;
+  showPasswordReset = false; // Add this line
 
-  // Backend Base URL
   private baseUrl = 'http://127.0.0.1:8000';
 
   userDetailsForm: FormGroup = new FormGroup({
@@ -36,8 +36,19 @@ export class MyAccount {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
+  passwordForm: FormGroup = new FormGroup({
+    old_password: new FormControl('', Validators.required),
+    new_password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    confirm_password: new FormControl('', Validators.required),
+  });
+
   ngOnInit() {
     this.getUserDetails();
+  }
+  
+  // Add this method
+  togglePasswordReset() {
+    this.showPasswordReset = !this.showPasswordReset;
   }
 
   getUserDetails() {
@@ -50,22 +61,18 @@ export class MyAccount {
         email: this.userDetails.email,
       });
 
-      // 🔹 Try to fetch profile photo
       this.http
         .get<any>(`${this.baseUrl}/userprofile/get-profile-photo/${this.userDetails.userId}`)
         .subscribe({
           next: (res) => {
             if (res?.file_url) {
-              // ✅ Bust cache so new uploads appear immediately
-              // This is where you retrieve the saved URL and set it
               this.userDetails.profileImageUrl = this.baseUrl + res.file_url + `?t=${new Date().getTime()}`;
-              this.authService.setUserDetails(this.userDetails); // Save the updated userDetails to Auth service
+              this.authService.setUserDetails(this.userDetails);
             }
           },
           error: () => {
-            // ❌ Don’t overwrite → template fallback will handle default avatar
             console.warn('No profile photo found, showing default avatar.');
-            this.userDetails.profileImageUrl = ''; // Clear profile image if not found to ensure default image shows
+            this.userDetails.profileImageUrl = '';
             this.authService.setUserDetails(this.userDetails);
           },
         });
@@ -76,7 +83,6 @@ export class MyAccount {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      // ✅ Preview image immediately before upload
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.userDetails.profileImageUrl = e.target.result;
@@ -85,7 +91,6 @@ export class MyAccount {
     }
   }
 
-  // 🔹 Upload or Update the profile photo
   private uploadOrUpdateProfileImage() {
     if (!this.selectedFile) return;
 
@@ -96,10 +101,8 @@ export class MyAccount {
     let request$;
 
     if (this.userDetails.profileImageUrl && this.userDetails.profileImageUrl.startsWith(this.baseUrl)) {
-      // Already has stored image → update
       request$ = this.http.put(`${this.baseUrl}/userprofile/update-profile-photo`, formData);
     } else {
-      // No image yet → upload
       request$ = this.http.post(`${this.baseUrl}/userprofile/upload-profile-photo`, formData);
     }
 
@@ -107,9 +110,7 @@ export class MyAccount {
       next: (res: any) => {
         this.toast.success(res?.message || 'Profile image saved successfully.');
         if (res.file_url) {
-          // ✅ Set fresh URL with cache-busting param
           this.userDetails.profileImageUrl = this.baseUrl + res.file_url + `?t=${new Date().getTime()}`;
-          // Now save the new image URL to the user's details in your Auth service
           this.authService.setUserDetails(this.userDetails);
         }
       },
@@ -120,7 +121,6 @@ export class MyAccount {
     });
   }
 
-  // 🔹 Main submit
   onSubmit() {
     if (this.userDetailsForm.valid) {
       const updatePayload = {
@@ -131,14 +131,11 @@ export class MyAccount {
       this.employeeServices.updateEmployee(updatePayload).subscribe({
         next: (res) => {
           this.toast.success(res?.message || 'Employee details updated successfully.');
-
-          // ✅ Update auth details locally
           this.authService.setUserDetails({
             ...this.userDetails,
             ...updatePayload,
           });
 
-          // ✅ Upload/Update photo if selected
           if (this.selectedFile) {
             this.uploadOrUpdateProfileImage();
           }
@@ -147,6 +144,26 @@ export class MyAccount {
           this.toast.error(err.message || 'Error saving employee');
           console.error(err);
         },
+      });
+    }
+  }
+
+  onPasswordSubmit() {
+    if (this.passwordForm.valid) {
+      const { old_password, new_password } = this.passwordForm.value;
+      const payload = {
+        id: this.userDetails.userId,
+        old_password,
+        new_password,
+      };
+      this.employeeServices.resetPassword(payload).subscribe({
+        next: (res) => {
+          this.toast.success(res.message || 'Password updated successfully');
+          this.passwordForm.reset();
+        },
+        error: (err) => {
+          this.toast.error(err.error.detail || 'Error updating password');
+        }
       });
     }
   }

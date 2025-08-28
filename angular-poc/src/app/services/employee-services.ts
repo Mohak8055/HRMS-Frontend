@@ -11,8 +11,6 @@ import { environment } from '../../environments/environment';
 export class EmployeeServices {
   http = inject(HttpClient);
   apiBaseUrl = environment.apiBaseUrl;
-  page = 1;
-  pageSize = 10;
 
   createEmployee(payload: Employee): Observable<any> {
     return this.http.post<any>(
@@ -47,6 +45,10 @@ export class EmployeeServices {
       `${this.apiBaseUrl}${environment.endpoints.updateEmployee}`,
       employee
     );
+  }
+
+  resetPassword(payload: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiBaseUrl}/user/reset-password`, payload);
   }
 
   deleteEmployee(payload: IDelete): Observable<any> {

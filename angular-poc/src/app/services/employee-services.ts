@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IDelete, IEmployeeResponse } from '../modal/employee';
@@ -18,6 +18,14 @@ export class EmployeeServices {
       payload
     );
   }
+
+  bulkCreateEmployees(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    return this.http.post<any>(`${this.apiBaseUrl}/user/bulk-create`, formData);
+  }
+
 
   getAllEmployees(params: any): Observable<any> {
     const url = `${this.apiBaseUrl}${environment.endpoints.getAllEmployees}`;

@@ -5,19 +5,18 @@ import { Breadcrum } from '../../components/breadcrum/breadcrum';
 import { ClientService } from '../../services/client-service';
 import { Employee, IAllEmployees } from '../../modal/client';
 import { EmployeeServices } from '../../services/employee-services';
-import {
-  CustomTable,
-  TableColumn,
-} from '../../components/custom-table/custom-table';
+import { CustomTable, TableColumn } from '../../components/custom-table/custom-table';
 import { CreateUpdateEmployeeModal } from '../../components/modals/create-update-employee-modal/create-update-employee-modal';
 import { ToastServices } from '../../services/toast/toast-services';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { PageEvent } from '@angular/material/paginator';
 import { DeptOptions } from '../../modal/employee';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-employees',
+  standalone: true,
   imports: [
     FormsModule,
     DeleteModal,
@@ -25,6 +24,7 @@ import { DeptOptions } from '../../modal/employee';
     CustomTable,
     CreateUpdateEmployeeModal,
     SearchBar,
+    CommonModule
   ],
   templateUrl: './employees.html',
   styleUrl: './employees.css',
@@ -63,6 +63,11 @@ export class Employees implements OnInit {
   showCreateUpdateModal = signal(false);
   employeeID = 0;
   isEditMode = signal(false);
+  showBulkUploadModal = false;
+  selectedFile: File | null = null;
+  uploadProgress = 0;
+  uploadResult: any = null;
+  fileError: string | null = null;
 
   columns: TableColumn[] = [
     { key: 'index', label: 'Sr.No', type: 'index' },
@@ -117,6 +122,48 @@ export class Employees implements OnInit {
     this.getAllRoles();
     this.fetchAllDepartements();
   }
+  
+  openBulkUploadModal() {
+    this.showBulkUploadModal = true;
+  }
+
+  closeBulkUploadModal() {
+    this.showBulkUploadModal = false;
+    this.selectedFile = null;
+    this.uploadProgress = 0;
+    this.uploadResult = null;
+    this.fileError = null;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.name.endsWith('.xlsx')) {
+        this.selectedFile = file;
+        this.fileError = null;
+      } else {
+        this.selectedFile = null;
+        this.fileError = 'Invalid file type. Please upload an Excel file (.xlsx).';
+      }
+    }
+  }
+
+  uploadFile() {
+    if (this.selectedFile) {
+      this.uploadProgress = 1; // Start progress
+      this.employeeServices.bulkCreateEmployees(this.selectedFile).subscribe(
+        (event: any) => {
+          this.uploadProgress = 100;
+          this.uploadResult = event;
+          this.fetchEmployees(); // Refresh the list
+        },
+        (err: any) => {
+          this.toast.error('Upload failed');
+          this.uploadProgress = 0;
+        }
+      );
+    }
+  }
 
   getAllRoles() {
     this.employeeServices.getAllRoles().subscribe({
@@ -166,13 +213,6 @@ export class Employees implements OnInit {
           this.fetchEmployees();
           this.toast.success(res.message || 'Employee created successfully.');
           this.closeModal();
-          // if (res.result) {
-          //   this.fetchEmployees();
-          //   this.toast.success(res.message || 'Employee created successfully.');
-          //   this.closeModal();
-          // } else {
-          //   this.toast.warning(res.message || 'Invalid data');
-          // }
         },
         error: (err) => {
           this.toast.error(err.message || 'Error saving employee');
@@ -226,7 +266,6 @@ export class Employees implements OnInit {
       next: (res) => {
         console.log(res);
         this.selectedUser.set(res);
-        // this.clientObject = res.data;
       },
       error: (err) => {
         console.log(err);
@@ -243,12 +282,6 @@ export class Employees implements OnInit {
       next: (res) => {
         this.toast.success(res.message || 'Employee deteled successfully');
         this.fetchEmployees();
-        // if (res.result) {
-        //   this.toast.success(res.message || 'Employee deteled successfully');
-        //   this.fetchEmployees();
-        // } else {
-        //   this.toast.warning(res.message || 'Something went wrong');
-        // }
       },
       error: (err) => {
         this.toast.error(err.message || 'Error deleting employee');
@@ -317,13 +350,6 @@ export class Employees implements OnInit {
   submitModal = (user: Employee) => {
     console.log(user);
     const updatedDeatils = {
-      // employeeId: this.employeeID || undefined,
-      // employeeName: user.employeeName,
-      // deptId: user.deptId,
-      // deptName: '',
-      // contactNo: user.contactNo,
-      // emailId: user.emailId,
-      // role: user.role,
       ...user,
       id: this.employeeID || undefined,
       password: 'Stixis@123',
@@ -361,6 +387,5 @@ export class Employees implements OnInit {
     this.params = params;
     this.fetchEmployees();
     console.log('Search request received:', event);
-    // Trigger API call or filter logic here
   }
 }

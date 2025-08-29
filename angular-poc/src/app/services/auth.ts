@@ -1,13 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServices } from './auth-services';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   private tokenKey = 'authData';
+  private userDetails$$ = new BehaviorSubject<any>(this.getUserDetailsFromStorage());
+  public userDetails$ = this.userDetails$$.asObservable();
   router = inject(Router);
   authServices = inject(AuthServices);
 
@@ -16,7 +18,8 @@ export class Auth {
       this.authServices.login(data).subscribe({
         next: (response) => {
           if (response && response.access_token) {
-            localStorage.setItem('authData', JSON.stringify(response));
+            localStorage.setItem(this.tokenKey, JSON.stringify(response));
+            this.userDetails$$.next(response);
             observer.next(true);
           } else {
             observer.next(false);
@@ -34,6 +37,7 @@ export class Auth {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    this.userDetails$$.next(null);
     this.router.navigateByUrl('/login');
   }
 
@@ -42,27 +46,26 @@ export class Auth {
   }
 
   getUserRole(): string | null {
-    const token = localStorage.getItem(this.tokenKey);
-    if (!token) return null;
-    try {
-      const parsed = JSON.parse(token);
-      return parsed.roles[0].name;
-    } catch {
-      return null;
-    }
+    const userDetails = this.userDetails$$.getValue();
+    return userDetails?.roles?.[0]?.name || null;
   }
 
   getUserDetails(): any {
-    const token = localStorage.getItem(this.tokenKey);
-    if (!token) return null;
-    try {
-      return JSON.parse(token);
-    } catch {
-      return null;
-    }
+    return this.userDetails$$.getValue();
   }
+
+  private getUserDetailsFromStorage(): any {
+    const token = localStorage.getItem(this.tokenKey);
+    if (!token) return null;
+    try {
+      return JSON.parse(token);
+    } catch {
+      return null;
+    }
+  }
 
   setUserDetails(userDetails: any): void {
     localStorage.setItem(this.tokenKey, JSON.stringify(userDetails));
+    this.userDetails$$.next(userDetails);
   }
 }

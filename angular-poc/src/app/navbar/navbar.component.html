@@ -1,7 +1,13 @@
 <header class="navbar">
   <span class="logo" style="text-align: center;">Employee Management System</span>
   <nav style="display: inline-flex; align-items: center;">
-    <div><i style="font-size: 30px;" class="bi bi-person-circle"></i></div>
+    <div class="avatar-container">
+      @if (profileImageUrl$.getValue()) {
+        <img [src]="profileImageUrl$.getValue()" alt="Profile Avatar" class="avatar-img" />
+      } @else {
+        <i class="bi bi-person-circle default-avatar-icon"></i>
+      }
+    </div>
     <div class="header-name d-inline-block position-relative">
       <a (click)="toggleProfileMenu()" class="profile-link" style="cursor:pointer;">
         <strong>{{userName}}</strong><i style="margin-left: 5px;" class="bi bi-chevron-down"></i></a>
@@ -12,8 +18,6 @@
         <a style="color: black; cursor: pointer;" (click)="logout()">Logout</a>
       </div>
       }
-
     </div>
-
   </nav>
 </header>

@@ -22,7 +22,7 @@ export class MyAccount {
 
   userDetails: any = {};
   selectedFile: File | null = null;
-  showPasswordReset = false; // Add this line
+  showPasswordReset = false;
 
   private baseUrl = 'http://127.0.0.1:8000';
 
@@ -45,8 +45,7 @@ export class MyAccount {
   ngOnInit() {
     this.getUserDetails();
   }
-  
-  // Add this method
+
   togglePasswordReset() {
     this.showPasswordReset = !this.showPasswordReset;
   }
@@ -98,13 +97,7 @@ export class MyAccount {
     formData.append('user_id', this.userDetails.userId);
     formData.append('file', this.selectedFile);
 
-    let request$;
-
-    if (this.userDetails.profileImageUrl && this.userDetails.profileImageUrl.startsWith(this.baseUrl)) {
-      request$ = this.http.put(`${this.baseUrl}/userprofile/update-profile-photo`, formData);
-    } else {
-      request$ = this.http.post(`${this.baseUrl}/userprofile/upload-profile-photo`, formData);
-    }
+    const request$ = this.http.post(`${this.baseUrl}/userprofile/upload-profile-photo`, formData);
 
     request$.subscribe({
       next: (res: any) => {

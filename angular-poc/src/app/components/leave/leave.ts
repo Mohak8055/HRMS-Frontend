@@ -19,7 +19,6 @@ import { LeaveHistoryTab } from '../leave-history-tab/leave-history-tab';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { ToastServices } from '../../services/toast/toast-services';
-import { Breadcrum } from '../breadcrum/breadcrum';
 
 @Component({
   selector: 'app-leave',
@@ -32,7 +31,7 @@ import { Breadcrum } from '../breadcrum/breadcrum';
     LeaveRequestTab,
     LeaveHistoryTab,
     MatSelectModule,
-    MatInputModule
+    MatInputModule,
   ],
   templateUrl: './leave.html',
   styleUrl: './leave.css',
@@ -99,7 +98,7 @@ export class Leave implements OnInit {
       control.setErrors(Object.keys(errors).length ? errors : null);
     }
   }
-  //Date range validation
+
   dateRangeValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
       const fromDate = group.get('fromDate')?.value;
@@ -128,7 +127,6 @@ export class Leave implements OnInit {
     };
   }
 
-  //Get error message fun
   getFormError(controlName: string): string {
     const control = this.leaveForm.get(controlName);
     if (control && control.touched && control.invalid) {
@@ -158,7 +156,6 @@ export class Leave implements OnInit {
     const fromDate = new Date(fromDateIso);
     const toDate = new Date(toDateIso);
 
-    // Strip time to ensure date-only comparison (in UTC)
     const fromUTC = Date.UTC(
       fromDate.getUTCFullYear(),
       fromDate.getUTCMonth(),
@@ -170,13 +167,11 @@ export class Leave implements OnInit {
       toDate.getUTCDate()
     );
 
-    // Difference in milliseconds / ms per day + 1 to include both days
     const daysDiff = Math.floor((toUTC - fromUTC) / (1000 * 60 * 60 * 24)) + 1;
 
     return daysDiff > 0 ? daysDiff : 0;
   }
 
-  //API Save/Add Leave
   addLeaveReq(data: any) {
     const userId = this.userDeatils?.userId;
     const req: ILeaveCreate = {
@@ -190,7 +185,6 @@ export class Leave implements OnInit {
       next: (resp) => {
         if (resp) {
           this.toast.success('Leave applied successfully');
-          this.getLeaveById(userId);
           this.leaveForm.reset({
             leaveType: '',
             fromDate: null,
@@ -223,37 +217,34 @@ export class Leave implements OnInit {
 
   const formData = this.leaveForm.value;
 
-  // ✅ Map recipient based on applyingTo dropdown
   let recipient_mail = '';
   if (formData.applyingTo === '2') {
-    recipient_mail = 'sinchanargowda7@gmail.com'; // Mahesh P
+    recipient_mail = 'sinchanargowda7@gmail.com';
   } else if (formData.applyingTo === '1') {
-    recipient_mail = 'gowdamohak002@gmail.com'; // John B
+    recipient_mail = 'gowdamohak002@gmail.com';
   }
 
-  // ✅ Build static subject
   const subject = 'Applying for a leave';
 
-  // ✅ Build body dynamically
-  const body = `
-Dear Sir,
+  const employeeName = `${this.userDeatils?.firstName} ${this.userDeatils?.lastName}`;
 
-I am applying for a ${formData.leaveType} leave.
+  // Map the leave type to its full name
+  const leaveTypeMap: { [key: string]: string } = {
+    lop: 'Loss Of Pay',
+    annual: 'Annual Leave',
+    comp: 'Comp-Off'
+  };
+  const fullLeaveType = leaveTypeMap[formData.leaveType] || formData.leaveType;
 
-From Date: ${formData.fromDate}
-From Session: ${formData.fromSession || 'N/A'}
-To Date: ${formData.toDate}
-To Session: ${formData.toSession || 'N/A'}
-Contact Details: ${formData.contactDetails}
-Reason: ${formData.reason}
+  const body = {
+      leave_type: fullLeaveType,
+      from_date: formData.fromDate,
+      to_date: formData.toDate,
+      contact_details: formData.contactDetails,
+      reason: formData.reason,
+      employee_name: employeeName
+  };
 
-Kindly approve my request.
-
-Thank you,
-${this.userDeatils?.userName || 'Employee'}
-`;
-
-  // ✅ Call backend email API
   this.leaveServices.sendLeaveMail({ recipient_mail, subject, body }).subscribe({
     next: (resp) => {
       console.log('Mail sent successfully:', resp);
@@ -265,23 +256,8 @@ ${this.userDeatils?.userName || 'Employee'}
     },
   });
 
-  // ✅ Also save leave request in DB
   this.addLeaveReq(formData);
 }
-
-getLeaveById(id: number) {
-   this.leaveServices.getAllLeavesByEmployeeId(id).subscribe({
-      next: (response) => {
-        if (response.result) {
-          // The history tab will be updated automatically
-        }
-      },
-      error: (err) => {
-        console.log('Something Went wrong', err);
-      },
-    });
-  }
-
 
   resetForm() {
     this.leaveForm.reset({

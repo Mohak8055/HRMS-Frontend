@@ -26,6 +26,9 @@ export class EmployeeServices {
     return this.http.post<any>(`${this.apiBaseUrl}/user/bulk-create`, formData);
   }
 
+  exportUsers(): Observable<any> {
+    return this.http.get(`${this.apiBaseUrl}/user/export-users`, { responseType: 'blob' });
+  }
 
   getAllEmployees(params: any): Observable<any> {
     const url = `${this.apiBaseUrl}${environment.endpoints.getAllEmployees}`;

@@ -85,7 +85,16 @@ export class Employees implements OnInit {
           : '',
     },
     { key: 'email', label: 'Email Id', type: 'text' },
-    { key: 'phone', label: 'Mobile Number' },
+    {
+      key: 'phone',
+      label: 'Mobile Number',
+      render: (row: any) => {
+        if (row.phone) {
+          return Math.floor(row.phone).toString();
+        }
+        return '';
+      }
+    },
     {
       key: 'departmentId',
       label: 'Departement Name',
@@ -407,4 +416,3 @@ export class Employees implements OnInit {
     );
   }
 }
-

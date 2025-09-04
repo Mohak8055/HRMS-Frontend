@@ -48,6 +48,7 @@
     [formData]="selectedUser()"
     [isEdit]="isEditMode()"
     [submit]="submitModal"
+    (employeeCreated)="fetchEmployees()"
     />
 </div>
 
@@ -72,11 +73,13 @@
                     <div class="progress-bar" role="progressbar" [style.width.%]="uploadProgress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{uploadProgress}}%</div>
                 </div>
                 <div *ngIf="uploadResult" class="alert alert-info mt-3">
-                    <p>Created: {{uploadResult.created_count}}</p>
-                    <p>Errors: {{uploadResult.errors.length}}</p>
-                    <ul>
-                        <li *ngFor="let error of uploadResult.errors">{{error}}</li>
-                    </ul>
+                    <p>Created: {{uploadResult.created_count}} users</p>
+                    <ng-container *ngIf="uploadResult.errors && uploadResult.errors.length > 0">
+                        <p>Errors: {{uploadResult.errors.length}}</p>
+                        <ul>
+                            <li *ngFor="let error of uploadResult.errors">{{error}}</li>
+                        </ul>
+                    </ng-container>
                 </div>
             </div>
             <div class="modal-footer">

@@ -37,6 +37,7 @@ export class CreateUpdateEmployeeModal implements OnChanges {
   @Input() submit!: (data: Employee) => void;
   @Input() formData: Employee | null = null;
   @Input() isEdit: boolean = false;
+  @Output() employeeCreated = new EventEmitter<void>();
 
   min = new Date(1900, 0, 1);
   max = new Date(2100, 11, 31);
@@ -143,7 +144,6 @@ export class CreateUpdateEmployeeModal implements OnChanges {
         next: (res) => {
           console.log('Employee created successfully:', res);
           
-          // Construct email data for the NEW dedicated email service
           const emailPayload = {
             recipient_mail: this.employeeDetails.value.email,
             subject: 'Welcome to the Team! Your Login Credentials',
@@ -151,16 +151,17 @@ export class CreateUpdateEmployeeModal implements OnChanges {
             temporary_password: tempPassword,
           };
 
-          // Call the service to send the email
           this.employeeService.sendNewEmployeeMail(emailPayload).subscribe({
             next: (mailRes: any) => {
               console.log('Email sent successfully:', mailRes);
               this.toast.success('Employee created and welcome email sent successfully!');
+              this.employeeCreated.emit();
               this.closeModal();
             },
             error: (mailErr: any) => {
               console.error('Error sending welcome email:', mailErr);
               this.toast.error('Employee created, but failed to send welcome email.');
+              this.employeeCreated.emit();
               this.closeModal();
             }
           });
@@ -171,7 +172,8 @@ export class CreateUpdateEmployeeModal implements OnChanges {
         },
       });
     } else {
-      console.log(this.employeeDetails);
+      this.employeeDetails.markAllAsTouched();
+      this.toast.error('Please fill out all required fields correctly.');
     }
   }
 }

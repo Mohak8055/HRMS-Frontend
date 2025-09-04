@@ -164,10 +164,10 @@ export class Employees implements OnInit {
         (event: any) => {
           this.uploadProgress = 100;
           this.uploadResult = event;
-          this.fetchEmployees(); // Refresh the list
+          this.toast.success('File uploaded successfully. Employees are being processed in the background.');
         },
         (err: any) => {
-          this.toast.error('Upload failed');
+          this.toast.error('File upload failed. Please try again.');
           this.uploadProgress = 0;
         }
       );

@@ -1,6 +1,13 @@
-<!-- Layout wrapper -->
 <div class="layout-wrapper">
   <app-navbar style="position: fixed; top: 0; left: 0; right: 0; z-index: 1030; width: 100%;"></app-navbar>
+
+  <div *ngIf="broadcastMessage" class="broadcast-container">
+    <div class="broadcast-message">
+      <span>{{ broadcastMessage.content.message }}</span>
+      <button (click)="dismissBroadcast()" class="dismiss-btn">&times;</button>
+    </div>
+  </div>
+
   <app-sidebar class="sidebar-fixed"></app-sidebar>
   <main class="main-scrollable">
     <router-outlet></router-outlet>

@@ -22,3 +22,40 @@
   padding: 1rem;
   background: #f8f9fa;
 }
+
+/* Other styles remain the same */
+
+.broadcast-container {
+  position: fixed;
+  top: 70px; /* Increased space from the navbar */
+  right: 20px;
+  z-index: 1050; /* Ensure it's above other elements */
+  width: 350px;
+  max-width: 90%;
+}
+
+.broadcast-message {
+  background-color: #d1ecf1; /* Light blue background */
+  color: #0c5460; /* Darker blue text */
+  padding: 1rem;
+  border: 1px solid #bee5eb;
+  border-radius: .25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.dismiss-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #0c5460;
+  opacity: 0.7;
+}
+
+.dismiss-btn:hover {
+    opacity: 1;
+}

@@ -4,6 +4,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { WebsocketService } from '../services/websocket.service';
 import { CommonModule } from '@angular/common';
+import { Auth } from '../services/auth';
 
 // Define an interface for the new message structure
 interface BroadcastMessage {
@@ -20,9 +21,14 @@ interface BroadcastMessage {
 })
 export class LayoutComponent implements OnInit {
   websocketService = inject(WebsocketService);
+  authService = inject(Auth);
   broadcastMessage: BroadcastMessage | null = null;
   private cdRef = inject(ChangeDetectorRef);
-  private dismissedMessagesKey = 'dismissedBroadcasts';
+
+  private get dismissedMessagesKey(): string {
+    const userDetails = this.authService.getUserDetails();
+    return `dismissedBroadcasts_${userDetails?.userId}`;
+  }
 
   ngOnInit() {
     this.websocketService.messages$.subscribe((message: BroadcastMessage) => {

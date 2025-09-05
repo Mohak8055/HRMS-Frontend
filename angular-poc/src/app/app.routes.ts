@@ -10,6 +10,7 @@ import { Employees } from './admin/employees/employees';
 import { Leave } from './components/leave/leave';
 import { Holidays } from './holidays/holidays';
 import { MyAccount } from './my-account/my-account';
+import { BroadcastComponent } from './admin/broadcast/broadcast';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -27,6 +28,7 @@ export const routes: Routes = [
           { path: 'dashboard', component: Dashboard },
           { path: 'employee', component: Employees},
           { path: 'leave', component: Leave},
+          { path: 'broadcast', component: BroadcastComponent },
         ]
       },
       {
